@@ -1,3 +1,14 @@
+import { text } from './text/_index.js';
 import { validation } from './validation/_index.js';
 
-export { validation }
+/**
+ * @typedef {Object} MainNamespace
+ * @property text
+ * @property validation
+ */
+
+/** @type {MainNamespace} */
+export {
+  text,
+  validation
+}

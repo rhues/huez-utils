@@ -1,9 +1,9 @@
-# huez-utils
+# 📦 huez-utils
 
-A modern isomorphic JavaScript utility library built with Vite, ES Modules, Jasmine, and ESLint.
+_A modern isomorphic JavaScript utility library built with Vite, ES Modules, Jasmine, and ESLint._
 
-## Features
-- Tree-shakable utilities
+## ✨ Features
+- Tree-shakable utilities for validation and text
 - Unit tests with Jasmine
 - Linting with ESLint
 - JavaScript with TypeScript hints for DX
@@ -15,4 +15,7 @@ A modern isomorphic JavaScript utility library built with Vite, ES Modules, Jasm
 - `npm run lint` - Lint code
 - `npm run test` - Run tests
 - `npm run coverage` - Check code coverage
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).
 
