@@ -9,7 +9,7 @@ const FILE_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt'
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const OUTPUT_PATH = path.resolve(__dirname, '../src/validation/tlds.js');
+const OUTPUT_PATH = path.resolve(__dirname, '../src/data/tlds.js');
 
 let lineLength = 0
 

@@ -88,3 +88,22 @@ export const validation: {
    */
   phone(value: string, options?: object): ValidationResult;
 }
+
+export interface AreaCodeRecord {
+  code: string;
+  location: string;
+  country: string;
+}
+
+/**
+ * Namespace for phone related functions
+ * @namespace phone
+ */
+export const phone: {
+  /**
+   * @description gets an area code record
+   * @param {string} code A 3-digit area code
+   * @returns {AreaCodeRecord} Information about an area code
+   */
+  getAreaCode(code: string): AreaCodeRecord;
+}

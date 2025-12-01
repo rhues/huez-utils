@@ -6,15 +6,15 @@ function a(c, o, n) {
     const i = U.split(" ");
     let S = "";
     i.forEach(function(N) {
-      let e = S + " " + N;
-      c.measureText(e.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = N) : S = e.trim();
+      let r = S + " " + N;
+      c.measureText(r.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = N) : S = r.trim();
     }), S.length > 0 && t.lines.push(S);
   }), E[o + n + c.font] = t.lines, t);
 }
 function O() {
   Object.keys(E).forEach((c) => delete E[c]);
 }
-const D = {
+const X = {
   canvasWordWrap: a,
   clearCanvasWordWrapCache: O
 }, C = /* @__PURE__ */ new Set([
@@ -1611,14 +1611,14 @@ const D = {
 function l(c) {
   return c >= 48 && c <= 57;
 }
-function R(c) {
+function d(c) {
   return c >= 65 && c <= 90;
 }
-function d(c) {
+function R(c) {
   return c >= 97 && c <= 122;
 }
 function u(c) {
-  return !(!d(c) && !R(c) && !l(c) && c !== 45 && !(c >= 128));
+  return !(!R(c) && !d(c) && !l(c) && c !== 45 && !(c >= 128));
 }
 function T(c) {
   const o = { valid: !1, errors: [] };
@@ -1657,7 +1657,7 @@ function B(c) {
   const A = M(n[0]);
   return A.valid ? (o.valid = !0, o) : (o.errors.push(...A.errors), o);
 }
-const r = [
+const e = [
   { code: "201", location: "NJ", country: "US" },
   { code: "202", location: "DC", country: "US" },
   { code: "203", location: "CT", country: "US" },
@@ -2149,24 +2149,31 @@ function G(c, o = {}) {
     return n.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), n;
   if (o.usOnly)
     if (t.length === 10) {
-      if (!r.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
+      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
         return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else if (t.length === 11) {
       if (t.charAt(0) !== "1")
         return n.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), n;
-      if (!r.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
+      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
         return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else
       return n.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), n;
   return n.valid = !0, n;
 }
-const X = {
+const P = {
   domain: I,
   email: B,
   phone: G
 };
+function D(c) {
+  return e.find((o) => o.code === c);
+}
+const H = {
+  getAreaCode: D
+};
 export {
-  D as text,
-  X as validation
+  H as phone,
+  X as text,
+  P as validation
 };
 //# sourceMappingURL=index.es.js.map

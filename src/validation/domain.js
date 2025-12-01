@@ -1,6 +1,6 @@
 /** @module validation/domain */
 
-import { tlds } from './tlds.js'
+import { tlds } from '../data/tlds.js'
 
 /**
  * @param {number} c A codepoint

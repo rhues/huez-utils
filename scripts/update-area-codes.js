@@ -8,7 +8,7 @@ const NON_GEO_URL = 'https://api.nanpa.com/reports/public/npa/nonGeographicUse'
 // @ts-ignore
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const OUTPUT_PATH = path.resolve(__dirname, '../src/validation/areaCodes.js');
+const OUTPUT_PATH = path.resolve(__dirname, '../src/data/areaCodes.js');
 
 const countryList = {
   NJ: 'US',

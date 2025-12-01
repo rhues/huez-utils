@@ -1,4 +1,4 @@
-import { areaCodes } from './areaCodes.js';
+import { areaCodes } from '../data/areaCodes.js'
 
 /** @module validation/phone */
 
