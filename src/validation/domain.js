@@ -1,6 +1,6 @@
 /** @module validation/domain */
 
-import tldList from './tlds.js'
+import { tlds } from './tlds.js'
 
 /**
  * @param {number} c A codepoint
@@ -118,7 +118,7 @@ export function domain(value) {
   }
 
   // check top-level domain (TLD) against known list
-  if (!tldList.has(labels[labels.length - 1].toUpperCase())) {
+  if (!tlds.has(labels[labels.length - 1].toUpperCase())) {
     result.errors.push({ code: 'invalidDomainTld', message: 'Invalid domain top-level domain' })
     return result
   }

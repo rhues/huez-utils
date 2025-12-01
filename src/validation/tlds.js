@@ -5,9 +5,11 @@
   *   This file is auto-generated. Do not edit directly.
   *   To update, run the script at scripts/update-tlds.js
   * @see {@link https://data.iana.org/TLD/tlds-alpha-by-domain.txt|IANA TLDs}
-  * # Version 2025112600, Last Updated Wed Nov 26 07:07:01 2025 UTC
+  * # Version 2025113000, Last Updated Sun Nov 30 07:07:01 2025 UTC
+ * @type {Set<string>}
+ * @constant
   */
-export default new Set([
+const tlds = new Set([
   "AAA","AARP","ABB","ABBOTT","ABBVIE","ABC","ABLE","ABOGADO","ABUDHABI",
   "AC","ACADEMY","ACCENTURE","ACCOUNTANT","ACCOUNTANTS","ACO","ACTOR","AD",
   "ADS","ADULT","AE","AEG","AERO","AETNA","AF","AFL","AFRICA","AG","AGAKHAN",
@@ -186,3 +188,4 @@ export default new Set([
   "YAHOO","YAMAXUN","YANDEX","YE","YODOBASHI","YOGA","YOKOHAMA","YOU","YOUTUBE",
   "YT","YUN","ZA","ZAPPOS","ZARA","ZERO","ZIP","ZM","ZONE","ZUERICH","ZW"
 ])
+export { tlds }

@@ -56,8 +56,10 @@ async function downloadAndProcessTlds() {
     result.push('  *   To update, run the script at scripts/update-tlds.js\n')
     result.push('  * @see {@link https://data.iana.org/TLD/tlds-alpha-by-domain.txt|IANA TLDs}\n')
     result.push('  * ' + lines[0] + '\n')
+    result.push(' * @type {Set<string>}\n')
+    result.push(' * @constant\n')
     result.push('  */\n')
-    result.push('export default new Set([\n  ')
+    result.push('const tlds = new Set([\n  ')
 
     lines.forEach((line, index) => {
       if (index > 0 && line.length > 0) {
@@ -71,10 +73,11 @@ async function downloadAndProcessTlds() {
     }
 
     result.push('\n])\n')
+    result.push('export { tlds }\n')
 
     // 3. Write to file (overwrite if exists)
     await writeFile(OUTPUT_PATH, result, 'utf8')
-    console.log(`Processed file written to ${OUTPUT_PATH}`)
+      console.log(`Processed file written to ${OUTPUT_PATH}`)
   } catch (err) {
     console.error('Error:', err.message)
   }
