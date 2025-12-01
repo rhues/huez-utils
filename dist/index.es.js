@@ -1,23 +1,23 @@
-const R = {};
-function e(E, A, N) {
-  const I = { lines: [], fromCache: !1 };
-  return R[A + N + E.font] ? (I.lines = R[A + N + E.font], I.fromCache = !0, I) : (A.split(`
-`).forEach((G) => {
-    const M = G.split(" ");
-    let O = "";
-    M.forEach(function(T) {
-      let C = O + " " + T;
-      E.measureText(C.trim()).width > N ? (O.length > 0 && I.lines.push(O), O = T) : O = C.trim();
-    }), O.length > 0 && I.lines.push(O);
-  }), R[A + N + E.font] = I.lines, I);
+const E = {};
+function a(c, o, n) {
+  const t = { lines: [], fromCache: !1 };
+  return E[o + n + c.font] ? (t.lines = E[o + n + c.font], t.fromCache = !0, t) : (o.split(`
+`).forEach((U) => {
+    const i = U.split(" ");
+    let S = "";
+    i.forEach(function(N) {
+      let e = S + " " + N;
+      c.measureText(e.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = N) : S = e.trim();
+    }), S.length > 0 && t.lines.push(S);
+  }), E[o + n + c.font] = t.lines, t);
 }
-function D() {
-  Object.keys(R).forEach((E) => delete R[E]);
+function O() {
+  Object.keys(E).forEach((c) => delete E[c]);
 }
-const F = {
-  canvasWordWrap: e,
-  clearCanvasWordWrapCache: D
-}, r = /* @__PURE__ */ new Set([
+const D = {
+  canvasWordWrap: a,
+  clearCanvasWordWrapCache: O
+}, C = /* @__PURE__ */ new Set([
   "AAA",
   "AARP",
   "ABB",
@@ -1608,515 +1608,565 @@ const F = {
   "ZUERICH",
   "ZW"
 ]);
-function U(E) {
-  return E >= 48 && E <= 57;
+function l(c) {
+  return c >= 48 && c <= 57;
 }
-function X(E) {
-  return E >= 65 && E <= 90;
+function R(c) {
+  return c >= 65 && c <= 90;
 }
-function P(E) {
-  return E >= 97 && E <= 122;
+function d(c) {
+  return c >= 97 && c <= 122;
 }
-function n(E) {
-  return !(!P(E) && !X(E) && !U(E) && E !== 45 && !(E >= 128));
+function u(c) {
+  return !(!d(c) && !R(c) && !l(c) && c !== 45 && !(c >= 128));
 }
-function H(E) {
-  const A = { valid: !1, errors: [] };
-  return E.length < 1 || E.length > 63 ? (A.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), A) : Array.from(E, (I) => I.codePointAt(0)).every(n) ? E.startsWith("-") || E.endsWith("-") ? (A.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), A) : (A.valid = !0, A) : (A.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), A);
+function T(c) {
+  const o = { valid: !1, errors: [] };
+  return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(u) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
 }
-function B(E) {
-  const A = { valid: !1, errors: [] };
-  if (!E)
-    return A.valid = !0, A;
-  if (E.length > 253 || E.length < 3)
-    return A.errors.push({ code: "invalidDomainLength", message: "Invalid domain length" }), A;
-  const N = E.split(".");
-  return N.length < 2 ? (A.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), A) : (N.forEach((I) => {
-    const S = H(I);
-    S.errors.length > 0 && A.errors.push(...S.errors);
-  }), A.errors.length > 0 ? A : r.has(N[N.length - 1].toUpperCase()) ? (A.valid = !0, A) : (A.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), A));
+function I(c) {
+  const o = { valid: !1, errors: [] };
+  if (!c)
+    return o.valid = !0, o;
+  if (c.length > 253 || c.length < 3)
+    return o.errors.push({ code: "invalidDomainLength", message: "Invalid domain length" }), o;
+  const n = c.split(".");
+  return n.length < 2 ? (o.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), o) : (n.forEach((t) => {
+    const A = T(t);
+    A.errors.length > 0 && o.errors.push(...A.errors);
+  }), o.errors.length > 0 ? o : C.has(n[n.length - 1].toUpperCase()) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), o));
 }
-const s = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
-function i(E) {
-  return !s.has(E);
+const y = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
+function L(c) {
+  return !y.has(c);
 }
-function t(E) {
-  const A = { valid: !1, errors: [] };
-  return E.length > 64 || E.length < 1 ? (A.errors.push({ code: "invalidEmailLocalPartLength", message: "Invalid email local part length" }), A) : E.startsWith(".") || E.includes("..") ? (A.errors.push({ code: "invalidEmailDot", message: "Invalid email dot" }), A) : E.toLowerCase() === "postmaster" ? (A.errors.push({ code: "invalidEmailNoPostmaster", message: "Invalid email no postmaster" }), A) : Array.from(E, (I) => I.codePointAt(0)).every(i) ? (A.valid = !0, A) : (A.errors.push({ code: "invalidEmailCharacter", message: "Invalid email charactrer" }), A);
+function M(c) {
+  const o = { valid: !1, errors: [] };
+  return c.length > 64 || c.length < 1 ? (o.errors.push({ code: "invalidEmailLocalPartLength", message: "Invalid email local part length" }), o) : c.startsWith(".") || c.includes("..") ? (o.errors.push({ code: "invalidEmailDot", message: "Invalid email dot" }), o) : c.toLowerCase() === "postmaster" ? (o.errors.push({ code: "invalidEmailNoPostmaster", message: "Invalid email no postmaster" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(L) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidEmailCharacter", message: "Invalid email charactrer" }), o);
 }
-function a(E) {
-  const A = { valid: !1, errors: [] };
-  if (!E)
-    return A.valid = !0, A;
-  const N = E.split("@");
-  if (N.length !== 2)
-    return A.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), A;
-  const I = B(N[1]);
-  if (!I.valid)
-    return A.errors.push(...I.errors), A;
-  const S = t(N[0]);
-  return S.valid ? (A.valid = !0, A) : (A.errors.push(...S.errors), A);
+function B(c) {
+  const o = { valid: !1, errors: [] };
+  if (!c)
+    return o.valid = !0, o;
+  const n = c.split("@");
+  if (n.length !== 2)
+    return o.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), o;
+  const t = I(n[1]);
+  if (!t.valid)
+    return o.errors.push(...t.errors), o;
+  const A = M(n[0]);
+  return A.valid ? (o.valid = !0, o) : (o.errors.push(...A.errors), o);
 }
-const L = /* @__PURE__ */ new Set([
-  // Alabama
-  "205",
-  "251",
-  "256",
-  "334",
-  "659",
-  "938",
-  // Alaska
-  "907",
-  // Arizona
-  "480",
-  "520",
-  "602",
-  "623",
-  "928",
-  // Arkansas
-  "327",
-  "479",
-  "501",
-  "870",
-  // California
-  "209",
-  "213",
-  "279",
-  "310",
-  "323",
-  "341",
-  "350",
-  "369",
-  "408",
-  "415",
-  "424",
-  "442",
-  "510",
-  "530",
-  "559",
-  "562",
-  "619",
-  "626",
-  "628",
-  "650",
-  "657",
-  "661",
-  "669",
-  "707",
-  "714",
-  "747",
-  "760",
-  "805",
-  "818",
-  "820",
-  "831",
-  "840",
-  "858",
-  "909",
-  "916",
-  "925",
-  "949",
-  "951",
-  // Colorado
-  "303",
-  "719",
-  "720",
-  "970",
-  "983",
-  // Connecticut
-  "203",
-  "475",
-  "860",
-  "959",
-  // DC
-  "202",
-  "771",
-  // Delaware
-  "302",
-  // Florida
-  "239",
-  "305",
-  "321",
-  "352",
-  "386",
-  "407",
-  "448",
-  "561",
-  "645",
-  "656",
-  "689",
-  "727",
-  "728",
-  "754",
-  "772",
-  "786",
-  "813",
-  "850",
-  "863",
-  "904",
-  "941",
-  "954",
-  // Georgia
-  "229",
-  "404",
-  "470",
-  "478",
-  "678",
-  "706",
-  "762",
-  "770",
-  "912",
-  "943",
-  // Hawaii
-  "808",
-  // Idaho
-  "208",
-  "986",
-  // Illinois
-  "217",
-  "224",
-  "309",
-  "312",
-  "331",
-  "447",
-  "464",
-  "618",
-  "630",
-  "708",
-  "730",
-  "773",
-  "779",
-  "815",
-  "847",
-  "861",
-  "872",
-  // IN
-  "219",
-  "260",
-  "317",
-  "463",
-  "574",
-  "765",
-  "812",
-  "930",
-  // Iowa
-  "319",
-  "515",
-  "563",
-  "641",
-  "712",
-  // Kansas
-  "316",
-  "620",
-  "785",
-  "913",
-  // Kentucky
-  "270",
-  "364",
-  "502",
-  "606",
-  "859",
-  // Louisiana
-  "225",
-  "318",
-  "337",
-  "504",
-  "985",
-  // Maine
-  "207",
-  // Maryland
-  "227",
-  "240",
-  "301",
-  "410",
-  "443",
-  "667",
-  // Massachusetts
-  "339",
-  "351",
-  "413",
-  "508",
-  "617",
-  "774",
-  "781",
-  "857",
-  "978",
-  // Michigan
-  "231",
-  "248",
-  "269",
-  "313",
-  "517",
-  "586",
-  "616",
-  "734",
-  "810",
-  "906",
-  "947",
-  "989",
-  // Minnesota
-  "218",
-  "320",
-  "507",
-  "612",
-  "651",
-  "763",
-  "952",
-  // Mississippi
-  "228",
-  "601",
-  "662",
-  "769",
-  // Missouri
-  "235",
-  "314",
-  "417",
-  "557",
-  "573",
-  "636",
-  "660",
-  "816",
-  "975",
-  // Montana
-  "406",
-  // Nebraska
-  "308",
-  "402",
-  "531",
-  // Nevada
-  "702",
-  "725",
-  "775",
-  // New Hampshire
-  "603",
-  // New Jersey
-  "201",
-  "551",
-  "609",
-  "640",
-  "732",
-  "848",
-  "856",
-  "862",
-  "908",
-  "973",
-  // New Mexico
-  "505",
-  "575",
-  // New York
-  "212",
-  "315",
-  "329",
-  "332",
-  "347",
-  "363",
-  "516",
-  "518",
-  "585",
-  "607",
-  "624",
-  "631",
-  "646",
-  "680",
-  "716",
-  "718",
-  "838",
-  "845",
-  "914",
-  "917",
-  "929",
-  "934",
-  // North Carolina
-  "252",
-  "336",
-  "704",
-  "743",
-  "828",
-  "910",
-  "919",
-  "980",
-  "984",
-  // North Dakota
-  "701",
-  // Ohio
-  "216",
-  "220",
-  "234",
-  "283",
-  "326",
-  "330",
-  "380",
-  "419",
-  "436",
-  "440",
-  "513",
-  "567",
-  "614",
-  "740",
-  "937",
-  // Oklahoma
-  "405",
-  "539",
-  "572",
-  "580",
-  "918",
-  // Oregon
-  "458",
-  "503",
-  "541",
-  "971",
-  // Pennsylvania
-  "215",
-  "223",
-  "267",
-  "272",
-  "274",
-  "412",
-  "445",
-  "484",
-  "570",
-  "582",
-  "610",
-  "717",
-  "724",
-  "814",
-  "835",
-  "878",
-  // Rohde Island
-  "401",
-  // South Carolina
-  "803",
-  "839",
-  "843",
-  "854",
-  "864",
-  // South Dakota
-  "605",
-  // Tennessee
-  "423",
-  "615",
-  "629",
-  "731",
-  "865",
-  "901",
-  "931",
-  // Territories
-  "340",
-  // VI 
-  "670",
-  // MP
-  "671",
-  // GU
-  "684",
-  // AS
-  "787",
-  // PR
-  "939",
-  // PR
-  // Texas
-  "210",
-  "214",
-  "254",
-  "281",
-  "283",
-  "325",
-  "346",
-  "361",
-  "409",
-  "430",
-  "432",
-  "469",
-  "512",
-  "682",
-  "713",
-  "726",
-  "737",
-  "806",
-  "817",
-  "830",
-  "832",
-  "903",
-  "915",
-  "936",
-  "940",
-  "945",
-  "956",
-  "972",
-  "979",
-  // Utah
-  "385",
-  "435",
-  "801",
-  // Vermont
-  "802",
-  // Virginia
-  "276",
-  "434",
-  "540",
-  "571",
-  "686",
-  "703",
-  "757",
-  "804",
-  "826",
-  "948",
-  // Washington
-  "206",
-  "253",
-  "360",
-  "425",
-  "509",
-  "564",
-  // West Virginia
-  "304",
-  "681",
-  // Wisconsin
-  "262",
-  "274",
-  "353",
-  "414",
-  "534",
-  "608",
-  "715",
-  "920",
-  // Wyoming
-  "307",
-  // Toll Free
-  "800",
-  "833",
-  "844",
-  "855",
-  "866",
-  "877",
-  "888"
-]);
-function o(E, A = {}) {
-  const N = { valid: !1, errors: [] };
-  if (!E)
-    return N.valid = !0, N;
-  const I = E.replace(/\D/g, "");
-  if (I.length < 8 || I.length > 15)
-    return N.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), N;
-  if (A.usOnly)
-    if (I.length === 10) {
-      if (!L.has(I.substring(0, 3)))
-        return N.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), N;
-    } else if (I.length === 11) {
-      if (I.charAt(0) !== "1")
-        return N.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), N;
-      if (!L.has(I.substring(1, 4)))
-        return N.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), N;
+const r = [
+  { code: "201", location: "NJ", country: "US" },
+  { code: "202", location: "DC", country: "US" },
+  { code: "203", location: "CT", country: "US" },
+  { code: "204", location: "MANITOBA", country: "CA" },
+  { code: "205", location: "AL", country: "US" },
+  { code: "206", location: "WA", country: "US" },
+  { code: "207", location: "ME", country: "US" },
+  { code: "208", location: "ID", country: "US" },
+  { code: "209", location: "CA", country: "US" },
+  { code: "210", location: "TX", country: "US" },
+  { code: "212", location: "NY", country: "US" },
+  { code: "213", location: "CA", country: "US" },
+  { code: "214", location: "TX", country: "US" },
+  { code: "215", location: "PA", country: "US" },
+  { code: "216", location: "OH", country: "US" },
+  { code: "217", location: "IL", country: "US" },
+  { code: "218", location: "MN", country: "US" },
+  { code: "219", location: "IN", country: "US" },
+  { code: "220", location: "OH", country: "US" },
+  { code: "223", location: "PA", country: "US" },
+  { code: "224", location: "IL", country: "US" },
+  { code: "225", location: "LA", country: "US" },
+  { code: "226", location: "ONTARIO", country: "CA" },
+  { code: "227", location: "MD", country: "US" },
+  { code: "228", location: "MS", country: "US" },
+  { code: "229", location: "GA", country: "US" },
+  { code: "231", location: "MI", country: "US" },
+  { code: "234", location: "OH", country: "US" },
+  { code: "235", location: "MO", country: "US" },
+  { code: "236", location: "BRITISH COLUMBIA", country: "CA" },
+  { code: "239", location: "FL", country: "US" },
+  { code: "240", location: "MD", country: "US" },
+  { code: "242", location: "BAHAMAS", country: "BS" },
+  { code: "246", location: "BARBADOS", country: "BB" },
+  { code: "248", location: "MI", country: "US" },
+  { code: "249", location: "ONTARIO", country: "CA" },
+  { code: "250", location: "BRITISH COLUMBIA", country: "CA" },
+  { code: "251", location: "AL", country: "US" },
+  { code: "252", location: "NC", country: "US" },
+  { code: "253", location: "WA", country: "US" },
+  { code: "254", location: "TX", country: "US" },
+  { code: "256", location: "AL", country: "US" },
+  { code: "257", location: "BRITISH COLUMBIA", country: "CA" },
+  { code: "260", location: "IN", country: "US" },
+  { code: "262", location: "WI", country: "US" },
+  { code: "263", location: "QUEBEC", country: "CA" },
+  { code: "264", location: "ANGUILLA", country: "AI" },
+  { code: "267", location: "PA", country: "US" },
+  { code: "268", location: "ANTIGUA/BARBUDA", country: "AG" },
+  { code: "269", location: "MI", country: "US" },
+  { code: "270", location: "KY", country: "US" },
+  { code: "272", location: "PA", country: "US" },
+  { code: "274", location: "WI", country: "US" },
+  { code: "276", location: "VA", country: "US" },
+  { code: "279", location: "CA", country: "US" },
+  { code: "281", location: "TX", country: "US" },
+  { code: "283", location: "OH", country: "US" },
+  { code: "284", location: "BRITISH VIRGIN ISLANDS", country: "VG" },
+  { code: "289", location: "ONTARIO", country: "CA" },
+  { code: "301", location: "MD", country: "US" },
+  { code: "302", location: "DE", country: "US" },
+  { code: "303", location: "CO", country: "US" },
+  { code: "304", location: "WV", country: "US" },
+  { code: "305", location: "FL", country: "US" },
+  { code: "306", location: "SASKATCHEWAN", country: "CA" },
+  { code: "307", location: "WY", country: "US" },
+  { code: "308", location: "NE", country: "US" },
+  { code: "309", location: "IL", country: "US" },
+  { code: "310", location: "CA", country: "US" },
+  { code: "312", location: "IL", country: "US" },
+  { code: "313", location: "MI", country: "US" },
+  { code: "314", location: "MO", country: "US" },
+  { code: "315", location: "NY", country: "US" },
+  { code: "316", location: "KS", country: "US" },
+  { code: "317", location: "IN", country: "US" },
+  { code: "318", location: "LA", country: "US" },
+  { code: "319", location: "IA", country: "US" },
+  { code: "320", location: "MN", country: "US" },
+  { code: "321", location: "FL", country: "US" },
+  { code: "323", location: "CA", country: "US" },
+  { code: "324", location: "FL", country: "US" },
+  { code: "325", location: "TX", country: "US" },
+  { code: "326", location: "OH", country: "US" },
+  { code: "327", location: "AR", country: "US" },
+  { code: "329", location: "NY", country: "US" },
+  { code: "330", location: "OH", country: "US" },
+  { code: "331", location: "IL", country: "US" },
+  { code: "332", location: "NY", country: "US" },
+  { code: "334", location: "AL", country: "US" },
+  { code: "336", location: "NC", country: "US" },
+  { code: "337", location: "LA", country: "US" },
+  { code: "339", location: "MA", country: "US" },
+  { code: "340", location: "VI", country: "US" },
+  { code: "341", location: "CA", country: "US" },
+  { code: "343", location: "ONTARIO", country: "CA" },
+  { code: "345", location: "CAYMAN ISLANDS", country: "KY" },
+  { code: "346", location: "TX", country: "US" },
+  { code: "347", location: "NY", country: "US" },
+  { code: "350", location: "CA", country: "US" },
+  { code: "351", location: "MA", country: "US" },
+  { code: "352", location: "FL", country: "US" },
+  { code: "353", location: "WI", country: "US" },
+  { code: "354", location: "QUEBEC", country: "CA" },
+  { code: "357", location: "CA", country: "US" },
+  { code: "360", location: "WA", country: "US" },
+  { code: "361", location: "TX", country: "US" },
+  { code: "363", location: "NY", country: "US" },
+  { code: "364", location: "KY", country: "US" },
+  { code: "365", location: "ONTARIO", country: "CA" },
+  { code: "367", location: "QUEBEC", country: "CA" },
+  { code: "368", location: "ALBERTA", country: "CA" },
+  { code: "369", location: "CA", country: "US" },
+  { code: "380", location: "OH", country: "US" },
+  { code: "382", location: "ONTARIO", country: "CA" },
+  { code: "385", location: "UT", country: "US" },
+  { code: "386", location: "FL", country: "US" },
+  { code: "401", location: "RI", country: "US" },
+  { code: "402", location: "NE", country: "US" },
+  { code: "403", location: "ALBERTA", country: "CA" },
+  { code: "404", location: "GA", country: "US" },
+  { code: "405", location: "OK", country: "US" },
+  { code: "406", location: "MT", country: "US" },
+  { code: "407", location: "FL", country: "US" },
+  { code: "408", location: "CA", country: "US" },
+  { code: "409", location: "TX", country: "US" },
+  { code: "410", location: "MD", country: "US" },
+  { code: "412", location: "PA", country: "US" },
+  { code: "413", location: "MA", country: "US" },
+  { code: "414", location: "WI", country: "US" },
+  { code: "415", location: "CA", country: "US" },
+  { code: "416", location: "ONTARIO", country: "CA" },
+  { code: "417", location: "MO", country: "US" },
+  { code: "418", location: "QUEBEC", country: "CA" },
+  { code: "419", location: "OH", country: "US" },
+  { code: "423", location: "TN", country: "US" },
+  { code: "424", location: "CA", country: "US" },
+  { code: "425", location: "WA", country: "US" },
+  { code: "428", location: "NEW BRUNSWICK", country: "CA" },
+  { code: "430", location: "TX", country: "US" },
+  { code: "431", location: "MANITOBA", country: "CA" },
+  { code: "432", location: "TX", country: "US" },
+  { code: "434", location: "VA", country: "US" },
+  { code: "435", location: "UT", country: "US" },
+  { code: "436", location: "OH", country: "US" },
+  { code: "437", location: "ONTARIO", country: "CA" },
+  { code: "438", location: "QUEBEC", country: "CA" },
+  { code: "440", location: "OH", country: "US" },
+  { code: "441", location: "BERMUDA", country: "BM" },
+  { code: "442", location: "CA", country: "US" },
+  { code: "443", location: "MD", country: "US" },
+  { code: "445", location: "PA", country: "US" },
+  { code: "447", location: "IL", country: "US" },
+  { code: "448", location: "FL", country: "US" },
+  { code: "450", location: "QUEBEC", country: "CA" },
+  { code: "457", location: "LA", country: "US" },
+  { code: "458", location: "OR", country: "US" },
+  { code: "463", location: "IN", country: "US" },
+  { code: "464", location: "IL", country: "US" },
+  { code: "468", location: "QUEBEC", country: "CA" },
+  { code: "469", location: "TX", country: "US" },
+  { code: "470", location: "GA", country: "US" },
+  { code: "472", location: "NC", country: "US" },
+  { code: "473", location: "GRENADA", country: "GD" },
+  { code: "474", location: "SASKATCHEWAN", country: "CA" },
+  { code: "475", location: "CT", country: "US" },
+  { code: "478", location: "GA", country: "US" },
+  { code: "479", location: "AR", country: "US" },
+  { code: "480", location: "AZ", country: "US" },
+  { code: "484", location: "PA", country: "US" },
+  { code: "501", location: "AR", country: "US" },
+  { code: "502", location: "KY", country: "US" },
+  { code: "503", location: "OR", country: "US" },
+  { code: "504", location: "LA", country: "US" },
+  { code: "505", location: "NM", country: "US" },
+  { code: "506", location: "NEW BRUNSWICK", country: "CA" },
+  { code: "507", location: "MN", country: "US" },
+  { code: "508", location: "MA", country: "US" },
+  { code: "509", location: "WA", country: "US" },
+  { code: "510", location: "CA", country: "US" },
+  { code: "512", location: "TX", country: "US" },
+  { code: "513", location: "OH", country: "US" },
+  { code: "514", location: "QUEBEC", country: "CA" },
+  { code: "515", location: "IA", country: "US" },
+  { code: "516", location: "NY", country: "US" },
+  { code: "517", location: "MI", country: "US" },
+  { code: "518", location: "NY", country: "US" },
+  { code: "519", location: "ONTARIO", country: "CA" },
+  { code: "520", location: "AZ", country: "US" },
+  { code: "530", location: "CA", country: "US" },
+  { code: "531", location: "NE", country: "US" },
+  { code: "534", location: "WI", country: "US" },
+  { code: "539", location: "OK", country: "US" },
+  { code: "540", location: "VA", country: "US" },
+  { code: "541", location: "OR", country: "US" },
+  { code: "548", location: "ONTARIO", country: "CA" },
+  { code: "551", location: "NJ", country: "US" },
+  { code: "557", location: "MO", country: "US" },
+  { code: "559", location: "CA", country: "US" },
+  { code: "561", location: "FL", country: "US" },
+  { code: "562", location: "CA", country: "US" },
+  { code: "563", location: "IA", country: "US" },
+  { code: "564", location: "WA", country: "US" },
+  { code: "567", location: "OH", country: "US" },
+  { code: "570", location: "PA", country: "US" },
+  { code: "571", location: "VA", country: "US" },
+  { code: "572", location: "OK", country: "US" },
+  { code: "573", location: "MO", country: "US" },
+  { code: "574", location: "IN", country: "US" },
+  { code: "575", location: "NM", country: "US" },
+  { code: "579", location: "QUEBEC", country: "CA" },
+  { code: "580", location: "OK", country: "US" },
+  { code: "581", location: "QUEBEC", country: "CA" },
+  { code: "582", location: "PA", country: "US" },
+  { code: "584", location: "MANITOBA", country: "CA" },
+  { code: "585", location: "NY", country: "US" },
+  { code: "586", location: "MI", country: "US" },
+  { code: "587", location: "ALBERTA", country: "CA" },
+  { code: "601", location: "MS", country: "US" },
+  { code: "602", location: "AZ", country: "US" },
+  { code: "603", location: "NH", country: "US" },
+  { code: "604", location: "BRITISH COLUMBIA", country: "CA" },
+  { code: "605", location: "SD", country: "US" },
+  { code: "606", location: "KY", country: "US" },
+  { code: "607", location: "NY", country: "US" },
+  { code: "608", location: "WI", country: "US" },
+  { code: "609", location: "NJ", country: "US" },
+  { code: "610", location: "PA", country: "US" },
+  { code: "612", location: "MN", country: "US" },
+  { code: "613", location: "ONTARIO", country: "CA" },
+  { code: "614", location: "OH", country: "US" },
+  { code: "615", location: "TN", country: "US" },
+  { code: "616", location: "MI", country: "US" },
+  { code: "617", location: "MA", country: "US" },
+  { code: "618", location: "IL", country: "US" },
+  { code: "619", location: "CA", country: "US" },
+  { code: "620", location: "KS", country: "US" },
+  { code: "621", location: "TX", country: "US" },
+  { code: "623", location: "AZ", country: "US" },
+  { code: "624", location: "NY", country: "US" },
+  { code: "626", location: "CA", country: "US" },
+  { code: "628", location: "CA", country: "US" },
+  { code: "629", location: "TN", country: "US" },
+  { code: "630", location: "IL", country: "US" },
+  { code: "631", location: "NY", country: "US" },
+  { code: "636", location: "MO", country: "US" },
+  { code: "639", location: "SASKATCHEWAN", country: "CA" },
+  { code: "640", location: "NJ", country: "US" },
+  { code: "641", location: "IA", country: "US" },
+  { code: "645", location: "FL", country: "US" },
+  { code: "646", location: "NY", country: "US" },
+  { code: "647", location: "ONTARIO", country: "CA" },
+  { code: "649", location: "TURKS & CAICOS ISLANDS", country: "TC" },
+  { code: "650", location: "CA", country: "US" },
+  { code: "651", location: "MN", country: "US" },
+  { code: "656", location: "FL", country: "US" },
+  { code: "657", location: "CA", country: "US" },
+  { code: "658", location: "JAMAICA", country: "JM" },
+  { code: "659", location: "AL", country: "US" },
+  { code: "660", location: "MO", country: "US" },
+  { code: "661", location: "CA", country: "US" },
+  { code: "662", location: "MS", country: "US" },
+  { code: "664", location: "MONTSERRAT", country: "MS" },
+  { code: "667", location: "MD", country: "US" },
+  { code: "669", location: "CA", country: "US" },
+  { code: "670", location: "CNMI", country: "MP" },
+  { code: "671", location: "GU", country: "US" },
+  { code: "672", location: "BRITISH COLUMBIA", country: "CA" },
+  { code: "678", location: "GA", country: "US" },
+  { code: "679", location: "MI", country: "US" },
+  { code: "680", location: "NY", country: "US" },
+  { code: "681", location: "WV", country: "US" },
+  { code: "682", location: "TX", country: "US" },
+  { code: "683", location: "ONTARIO", country: "CA" },
+  { code: "684", location: "AS", country: "US" },
+  { code: "686", location: "VA", country: "US" },
+  { code: "689", location: "FL", country: "US" },
+  { code: "701", location: "ND", country: "US" },
+  { code: "702", location: "NV", country: "US" },
+  { code: "703", location: "VA", country: "US" },
+  { code: "704", location: "NC", country: "US" },
+  { code: "705", location: "ONTARIO", country: "CA" },
+  { code: "706", location: "GA", country: "US" },
+  { code: "707", location: "CA", country: "US" },
+  { code: "708", location: "IL", country: "US" },
+  { code: "709", location: "NEWFOUNDLAND AND LABRADOR", country: "CA" },
+  { code: "712", location: "IA", country: "US" },
+  { code: "713", location: "TX", country: "US" },
+  { code: "714", location: "CA", country: "US" },
+  { code: "715", location: "WI", country: "US" },
+  { code: "716", location: "NY", country: "US" },
+  { code: "717", location: "PA", country: "US" },
+  { code: "718", location: "NY", country: "US" },
+  { code: "719", location: "CO", country: "US" },
+  { code: "720", location: "CO", country: "US" },
+  { code: "721", location: "SINT MAARTEN", country: "SX" },
+  { code: "724", location: "PA", country: "US" },
+  { code: "725", location: "NV", country: "US" },
+  { code: "726", location: "TX", country: "US" },
+  { code: "727", location: "FL", country: "US" },
+  { code: "728", location: "FL", country: "US" },
+  { code: "729", location: "TN", country: "US" },
+  { code: "730", location: "IL", country: "US" },
+  { code: "731", location: "TN", country: "US" },
+  { code: "732", location: "NJ", country: "US" },
+  { code: "734", location: "MI", country: "US" },
+  { code: "737", location: "TX", country: "US" },
+  { code: "738", location: "CA", country: "US" },
+  { code: "740", location: "OH", country: "US" },
+  { code: "742", location: "ONTARIO", country: "CA" },
+  { code: "743", location: "NC", country: "US" },
+  { code: "747", location: "CA", country: "US" },
+  { code: "748", location: "CO", country: "US" },
+  { code: "753", location: "ONTARIO", country: "CA" },
+  { code: "754", location: "FL", country: "US" },
+  { code: "757", location: "VA", country: "US" },
+  { code: "758", location: "ST. LUCIA", country: "LC" },
+  { code: "760", location: "CA", country: "US" },
+  { code: "762", location: "GA", country: "US" },
+  { code: "763", location: "MN", country: "US" },
+  { code: "765", location: "IN", country: "US" },
+  { code: "767", location: "DOMINICA", country: "DM" },
+  { code: "769", location: "MS", country: "US" },
+  { code: "770", location: "GA", country: "US" },
+  { code: "771", location: "DC", country: "US" },
+  { code: "772", location: "FL", country: "US" },
+  { code: "773", location: "IL", country: "US" },
+  { code: "774", location: "MA", country: "US" },
+  { code: "775", location: "NV", country: "US" },
+  { code: "778", location: "BRITISH COLUMBIA", country: "CA" },
+  { code: "779", location: "IL", country: "US" },
+  { code: "780", location: "ALBERTA", country: "CA" },
+  { code: "781", location: "MA", country: "US" },
+  { code: "782", location: "NOVA SCOTIA - PRINCE EDWARD ISLAND", country: "CA" },
+  { code: "784", location: "ST. VINCENT & GRENADINES", country: "VC" },
+  { code: "785", location: "KS", country: "US" },
+  { code: "786", location: "FL", country: "US" },
+  { code: "787", location: "PR", country: "US" },
+  { code: "801", location: "UT", country: "US" },
+  { code: "802", location: "VT", country: "US" },
+  { code: "803", location: "SC", country: "US" },
+  { code: "804", location: "VA", country: "US" },
+  { code: "805", location: "CA", country: "US" },
+  { code: "806", location: "TX", country: "US" },
+  { code: "807", location: "ONTARIO", country: "CA" },
+  { code: "808", location: "HI", country: "US" },
+  { code: "809", location: "DOMINICAN REPUBLIC", country: "DO" },
+  { code: "810", location: "MI", country: "US" },
+  { code: "812", location: "IN", country: "US" },
+  { code: "813", location: "FL", country: "US" },
+  { code: "814", location: "PA", country: "US" },
+  { code: "815", location: "IL", country: "US" },
+  { code: "816", location: "MO", country: "US" },
+  { code: "817", location: "TX", country: "US" },
+  { code: "818", location: "CA", country: "US" },
+  { code: "819", location: "QUEBEC", country: "CA" },
+  { code: "820", location: "CA", country: "US" },
+  { code: "821", location: "SC", country: "US" },
+  { code: "825", location: "ALBERTA", country: "CA" },
+  { code: "826", location: "VA", country: "US" },
+  { code: "828", location: "NC", country: "US" },
+  { code: "829", location: "DOMINICAN REPUBLIC", country: "DO" },
+  { code: "830", location: "TX", country: "US" },
+  { code: "831", location: "CA", country: "US" },
+  { code: "832", location: "TX", country: "US" },
+  { code: "835", location: "PA", country: "US" },
+  { code: "837", location: "CA", country: "US" },
+  { code: "838", location: "NY", country: "US" },
+  { code: "839", location: "SC", country: "US" },
+  { code: "840", location: "CA", country: "US" },
+  { code: "843", location: "SC", country: "US" },
+  { code: "845", location: "NY", country: "US" },
+  { code: "847", location: "IL", country: "US" },
+  { code: "848", location: "NJ", country: "US" },
+  { code: "849", location: "DOMINICAN REPUBLIC", country: "DO" },
+  { code: "850", location: "FL", country: "US" },
+  { code: "854", location: "SC", country: "US" },
+  { code: "856", location: "NJ", country: "US" },
+  { code: "857", location: "MA", country: "US" },
+  { code: "858", location: "CA", country: "US" },
+  { code: "859", location: "KY", country: "US" },
+  { code: "860", location: "CT", country: "US" },
+  { code: "861", location: "IL", country: "US" },
+  { code: "862", location: "NJ", country: "US" },
+  { code: "863", location: "FL", country: "US" },
+  { code: "864", location: "SC", country: "US" },
+  { code: "865", location: "TN", country: "US" },
+  { code: "867", location: "NORTHWEST TERRITORIES -YUKON - NUNAVUT", country: "CA" },
+  { code: "868", location: "TRINIDAD & TOBAGO", country: "TT" },
+  { code: "869", location: "ST. KITTS & NEVIS", country: "KN" },
+  { code: "870", location: "AR", country: "US" },
+  { code: "872", location: "IL", country: "US" },
+  { code: "873", location: "QUEBEC", country: "CA" },
+  { code: "876", location: "JAMAICA", country: "JM" },
+  { code: "878", location: "PA", country: "US" },
+  { code: "879", location: "NEWFOUNDLAND AND LABRADOR", country: "CA" },
+  { code: "901", location: "TN", country: "US" },
+  { code: "902", location: "NOVA SCOTIA - PRINCE EDWARD ISLAND", country: "CA" },
+  { code: "903", location: "TX", country: "US" },
+  { code: "904", location: "FL", country: "US" },
+  { code: "905", location: "ONTARIO", country: "CA" },
+  { code: "906", location: "MI", country: "US" },
+  { code: "907", location: "AK", country: "US" },
+  { code: "908", location: "NJ", country: "US" },
+  { code: "909", location: "CA", country: "US" },
+  { code: "910", location: "NC", country: "US" },
+  { code: "912", location: "GA", country: "US" },
+  { code: "913", location: "KS", country: "US" },
+  { code: "914", location: "NY", country: "US" },
+  { code: "915", location: "TX", country: "US" },
+  { code: "916", location: "CA", country: "US" },
+  { code: "917", location: "NY", country: "US" },
+  { code: "918", location: "OK", country: "US" },
+  { code: "919", location: "NC", country: "US" },
+  { code: "920", location: "WI", country: "US" },
+  { code: "924", location: "MN", country: "US" },
+  { code: "925", location: "CA", country: "US" },
+  { code: "928", location: "AZ", country: "US" },
+  { code: "929", location: "NY", country: "US" },
+  { code: "930", location: "IN", country: "US" },
+  { code: "931", location: "TN", country: "US" },
+  { code: "934", location: "NY", country: "US" },
+  { code: "936", location: "TX", country: "US" },
+  { code: "937", location: "OH", country: "US" },
+  { code: "938", location: "AL", country: "US" },
+  { code: "939", location: "PR", country: "US" },
+  { code: "940", location: "TX", country: "US" },
+  { code: "941", location: "FL", country: "US" },
+  { code: "942", location: "ONTARIO", country: "CA" },
+  { code: "943", location: "GA", country: "US" },
+  { code: "945", location: "TX", country: "US" },
+  { code: "947", location: "MI", country: "US" },
+  { code: "948", location: "VA", country: "US" },
+  { code: "949", location: "CA", country: "US" },
+  { code: "951", location: "CA", country: "US" },
+  { code: "952", location: "MN", country: "US" },
+  { code: "954", location: "FL", country: "US" },
+  { code: "956", location: "TX", country: "US" },
+  { code: "959", location: "CT", country: "US" },
+  { code: "970", location: "CO", country: "US" },
+  { code: "971", location: "OR", country: "US" },
+  { code: "972", location: "TX", country: "US" },
+  { code: "973", location: "NJ", country: "US" },
+  { code: "975", location: "MO", country: "US" },
+  { code: "978", location: "MA", country: "US" },
+  { code: "979", location: "TX", country: "US" },
+  { code: "980", location: "NC", country: "US" },
+  { code: "983", location: "CO", country: "US" },
+  { code: "984", location: "NC", country: "US" },
+  { code: "985", location: "LA", country: "US" },
+  { code: "986", location: "ID", country: "US" },
+  { code: "989", location: "MI", country: "US" },
+  { code: "500", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "521", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "522", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "523", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "524", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "525", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "526", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "527", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "528", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "529", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "532", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "533", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "538", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "544", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "566", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "577", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "588", location: "NON-GEOGRAPHIC SERVICES", country: "US" },
+  { code: "600", location: "CANADIAN NON-GEOGRAPHIC TARIFFED SERVICES", country: "CA" },
+  { code: "622", location: "CANADIAN NON-GEOGRAPHIC SERVICES", country: "CA" },
+  { code: "633", location: "CANADIAN NON-GEOGRAPHIC SERVICES", country: "CA" },
+  { code: "700", location: "INTEREXCHANGE CARRIER SERVICES", country: "US" },
+  { code: "710", location: "US GOVERNMENT", country: "US" },
+  { code: "800", location: "TOLL-FREE", country: "US" },
+  { code: "833", location: "TOLL-FREE", country: "US" },
+  { code: "844", location: "TOLL-FREE", country: "US" },
+  { code: "855", location: "TOLL-FREE", country: "US" },
+  { code: "866", location: "TOLL-FREE", country: "US" },
+  { code: "877", location: "TOLL-FREE", country: "US" },
+  { code: "888", location: "TOLL-FREE", country: "US" },
+  { code: "900", location: "PREMIUM SERVICES", country: "US" }
+];
+function G(c, o = {}) {
+  const n = { valid: !1, errors: [] };
+  if (!c)
+    return n.valid = !0, n;
+  const t = c.replace(/\D/g, "");
+  if (t.length < 8 || t.length > 15)
+    return n.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), n;
+  if (o.usOnly)
+    if (t.length === 10) {
+      if (!r.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
+        return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
+    } else if (t.length === 11) {
+      if (t.charAt(0) !== "1")
+        return n.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), n;
+      if (!r.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
+        return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else
-      return N.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), N;
-  return N.valid = !0, N;
+      return n.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), n;
+  return n.valid = !0, n;
 }
-const K = {
-  domain: B,
-  email: a,
-  phone: o
+const X = {
+  domain: I,
+  email: B,
+  phone: G
 };
 export {
-  F as text,
-  K as validation
+  D as text,
+  X as validation
 };
 //# sourceMappingURL=index.es.js.map
