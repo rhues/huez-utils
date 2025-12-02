@@ -1,6 +1,9 @@
 /** @module text/canvasWordWrap */
 
-const wordWrapLookup = {}
+/**
+ * @type { Map<string,string[]> }
+ */
+const wordWrapLookup = new Map()
 
 /**
  * @typedef {Object} canvasWordWrapResult
@@ -26,8 +29,9 @@ export function canvasWordWrap(context, baseText, maxWidth) {
   const result = { lines: [], fromCache: false }
 
   // check if already calculated
-  if (wordWrapLookup[baseText + maxWidth + context.font]) {
-    result.lines = wordWrapLookup[baseText + maxWidth + context.font]
+  const existing = wordWrapLookup.get(baseText + maxWidth + context.font)
+  if (existing) {
+    result.lines.push(...existing)
     result.fromCache = true
     return result
   }
@@ -58,7 +62,7 @@ export function canvasWordWrap(context, baseText, maxWidth) {
     }
   })
 
-  wordWrapLookup[baseText + maxWidth + context.font] = result.lines
+  wordWrapLookup.set(baseText + maxWidth + context.font, result.lines)
   return result
 }
 
@@ -66,5 +70,5 @@ export function canvasWordWrap(context, baseText, maxWidth) {
  * @description Clears the cached word wrap data.
  */
 export function clearCanvasWordWrapCache() {
-  Object.keys(wordWrapLookup).forEach(key => delete wordWrapLookup[key]);
+  wordWrapLookup.clear()
 }

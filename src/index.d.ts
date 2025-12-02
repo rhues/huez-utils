@@ -106,4 +106,12 @@ export const phone: {
    * @returns {AreaCodeRecord} Information about an area code
    */
   getAreaCode(code: string): AreaCodeRecord;
+
+  /**
+ * @description formats an NPA phone number
+ * @memberof phone
+ * @param {string} value A phone number meeting the NPA standard
+ * @returns { string | undefined }
+ */
+  formatNpa(value: string): string | undefined;
 }

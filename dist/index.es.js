@@ -1,20 +1,20 @@
-const e = {};
+const E = /* @__PURE__ */ new Map();
 function a(c, o, n) {
-  const t = { lines: [], fromCache: !1 };
-  return e[o + n + c.font] ? (t.lines = e[o + n + c.font], t.fromCache = !0, t) : (o.split(`
+  const t = { lines: [], fromCache: !1 }, A = E.get(o + n + c.font);
+  return A ? (t.lines.push(...A), t.fromCache = !0, t) : (o.split(`
 `).forEach((I) => {
     const U = I.split(" ");
     let S = "";
-    U.forEach(function(N) {
-      let r = S + " " + N;
-      c.measureText(r.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = N) : S = r.trim();
+    U.forEach(function(r) {
+      let N = S + " " + r;
+      c.measureText(N.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = r) : S = N.trim();
     }), S.length > 0 && t.lines.push(S);
-  }), e[o + n + c.font] = t.lines, t);
+  }), E.set(o + n + c.font, t.lines), t);
 }
 function O() {
-  Object.keys(e).forEach((c) => delete e[c]);
+  E.clear();
 }
-const X = {
+const H = {
   canvasWordWrap: a,
   clearCanvasWordWrapCache: O
 }, l = /* @__PURE__ */ new Set([
@@ -1614,15 +1614,15 @@ function C(c) {
 function d(c) {
   return c >= 65 && c <= 90;
 }
-function R(c) {
+function u(c) {
   return c >= 97 && c <= 122;
 }
-function u(c) {
-  return !(!R(c) && !d(c) && !C(c) && c !== 45 && !(c >= 128));
+function R(c) {
+  return !(!u(c) && !d(c) && !C(c) && c !== 45 && !(c >= 128));
 }
 function T(c) {
   const o = { valid: !1, errors: [] };
-  return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(u) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
+  return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(R) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
 }
 function i(c) {
   const o = { valid: !1, errors: [] };
@@ -1657,7 +1657,7 @@ function B(c) {
   const A = M(n[0]);
   return A.valid ? (o.valid = !0, o) : (o.errors.push(...A.errors), o);
 }
-const E = [
+const e = [
   { code: "201", location: "NJ", country: "US" },
   { code: "202", location: "DC", country: "US" },
   { code: "203", location: "CT", country: "US" },
@@ -2149,18 +2149,18 @@ function G(c, o = {}) {
     return n.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), n;
   if (o.usOnly)
     if (t.length === 10) {
-      if (!E.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
+      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
         return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else if (t.length === 11) {
       if (t.charAt(0) !== "1")
         return n.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), n;
-      if (!E.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
+      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
         return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else
       return n.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), n;
   return n.valid = !0, n;
 }
-const P = {
+const s = {
   domain: i,
   email: B,
   phone: G
@@ -2170,18 +2170,28 @@ function D(c) {
     return;
   const o = c.replace(/\D/g, "");
   if (o.length === 3)
-    return E.find((n) => n.code === o);
+    return e.find((n) => n.code === o);
   if (o.length === 10)
-    return E.find((n) => n.code === o.substring(0, 3));
+    return e.find((n) => n.code === o.substring(0, 3));
   if (o.length === 11)
-    return E.find((n) => n.code === o.substring(1, 4));
+    return e.find((n) => n.code === o.substring(1, 4));
 }
-const H = {
-  getAreaCode: D
+function X(c) {
+  if (!c)
+    return;
+  const o = c.replace(/\D/g, "");
+  if (o.length === 10)
+    return `(${o.substring(0, 3)}) ${o.substring(3, 6)}-${o.substring(6, 10)}`;
+  if (o.length === 11)
+    return `(${o.substring(1, 4)}) ${o.substring(4, 7)}-${o.substring(7, 11)}`;
+}
+const F = {
+  getAreaCode: D,
+  formatNpa: X
 };
 export {
-  H as phone,
-  X as text,
-  P as validation
+  F as phone,
+  H as text,
+  s as validation
 };
 //# sourceMappingURL=index.es.js.map

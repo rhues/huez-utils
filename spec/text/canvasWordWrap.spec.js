@@ -18,6 +18,10 @@ describe('text.canvasWordWrap', () => {
     text.clearCanvasWordWrapCache();
   });
 
+  afterEach(() => {
+    text.clearCanvasWordWrapCache();
+  });
+
   it('should wrap long lines of text at 5px per character', () => {
      const result = text.canvasWordWrap(
       { 
