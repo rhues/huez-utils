@@ -28,16 +28,10 @@ export function phone(value, options = {}) {
     return result
   }
 
-  // TODO: first digits must match a known country code OR US area code
-
   if (options.usOnly) {
     // validate US area codes
     if (digits.length === 10) {
-
       if (!areaCodes.filter(a => a.country === 'US').find(a => a.code === digits.substring(0, 3))) {
-
-
-      //if (!usAreaCodes.has(digits.substring(0, 3))) {
         result.errors.push({ code: 'invalidUsPhoneAreaCode', message: 'Invalid US phone area code' })
         return result
       }
@@ -48,10 +42,7 @@ export function phone(value, options = {}) {
           return result
       }
       // validate area code
-
       if (!areaCodes.filter(a => a.country === 'US').find(a => a.code === digits.substring(1, 4))) {
-
-      //if (!usAreaCodes.has(digits.substring(1, 4))) {
         result.errors.push({ code: 'invalidUsPhoneAreaCode', message: 'Invalid US phone area code' })
         return result
       }

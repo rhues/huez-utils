@@ -1,23 +1,23 @@
-const E = {};
+const e = {};
 function a(c, o, n) {
   const t = { lines: [], fromCache: !1 };
-  return E[o + n + c.font] ? (t.lines = E[o + n + c.font], t.fromCache = !0, t) : (o.split(`
-`).forEach((U) => {
-    const i = U.split(" ");
+  return e[o + n + c.font] ? (t.lines = e[o + n + c.font], t.fromCache = !0, t) : (o.split(`
+`).forEach((I) => {
+    const U = I.split(" ");
     let S = "";
-    i.forEach(function(N) {
+    U.forEach(function(N) {
       let r = S + " " + N;
       c.measureText(r.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = N) : S = r.trim();
     }), S.length > 0 && t.lines.push(S);
-  }), E[o + n + c.font] = t.lines, t);
+  }), e[o + n + c.font] = t.lines, t);
 }
 function O() {
-  Object.keys(E).forEach((c) => delete E[c]);
+  Object.keys(e).forEach((c) => delete e[c]);
 }
 const X = {
   canvasWordWrap: a,
   clearCanvasWordWrapCache: O
-}, C = /* @__PURE__ */ new Set([
+}, l = /* @__PURE__ */ new Set([
   "AAA",
   "AARP",
   "ABB",
@@ -1608,7 +1608,7 @@ const X = {
   "ZUERICH",
   "ZW"
 ]);
-function l(c) {
+function C(c) {
   return c >= 48 && c <= 57;
 }
 function d(c) {
@@ -1618,13 +1618,13 @@ function R(c) {
   return c >= 97 && c <= 122;
 }
 function u(c) {
-  return !(!R(c) && !d(c) && !l(c) && c !== 45 && !(c >= 128));
+  return !(!R(c) && !d(c) && !C(c) && c !== 45 && !(c >= 128));
 }
 function T(c) {
   const o = { valid: !1, errors: [] };
   return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(u) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
 }
-function I(c) {
+function i(c) {
   const o = { valid: !1, errors: [] };
   if (!c)
     return o.valid = !0, o;
@@ -1634,7 +1634,7 @@ function I(c) {
   return n.length < 2 ? (o.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), o) : (n.forEach((t) => {
     const A = T(t);
     A.errors.length > 0 && o.errors.push(...A.errors);
-  }), o.errors.length > 0 ? o : C.has(n[n.length - 1].toUpperCase()) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), o));
+  }), o.errors.length > 0 ? o : l.has(n[n.length - 1].toUpperCase()) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), o));
 }
 const y = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
 function L(c) {
@@ -1651,13 +1651,13 @@ function B(c) {
   const n = c.split("@");
   if (n.length !== 2)
     return o.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), o;
-  const t = I(n[1]);
+  const t = i(n[1]);
   if (!t.valid)
     return o.errors.push(...t.errors), o;
   const A = M(n[0]);
   return A.valid ? (o.valid = !0, o) : (o.errors.push(...A.errors), o);
 }
-const e = [
+const E = [
   { code: "201", location: "NJ", country: "US" },
   { code: "202", location: "DC", country: "US" },
   { code: "203", location: "CT", country: "US" },
@@ -2149,24 +2149,32 @@ function G(c, o = {}) {
     return n.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), n;
   if (o.usOnly)
     if (t.length === 10) {
-      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
+      if (!E.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
         return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else if (t.length === 11) {
       if (t.charAt(0) !== "1")
         return n.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), n;
-      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
+      if (!E.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
         return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
     } else
       return n.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), n;
   return n.valid = !0, n;
 }
 const P = {
-  domain: I,
+  domain: i,
   email: B,
   phone: G
 };
 function D(c) {
-  return e.find((o) => o.code === c);
+  if (!c)
+    return;
+  const o = c.replace(/\D/g, "");
+  if (o.length === 3)
+    return E.find((n) => n.code === o);
+  if (o.length === 10)
+    return E.find((n) => n.code === o.substring(0, 3));
+  if (o.length === 11)
+    return E.find((n) => n.code === o.substring(1, 4));
 }
 const H = {
   getAreaCode: D

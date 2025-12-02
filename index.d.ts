@@ -76,3 +76,26 @@ export const validation: {
    */
   phone(value: string, options?: object): ValidationResult;
 }
+
+/**
+ * Represents the result of the canvasWordWrap function.
+ */
+export interface AreaCodeRecord {
+  code: string;
+  location: string;
+  country: string;
+}
+
+/**
+ * Namespace for phone number functions.
+ * @namespace phone
+ */
+export const phone: {
+
+  /**
+   * @description gets information about a phone area code
+   * @param {string} value A 3-digit area code or a complete phone number meeting the NPA standard
+   * @returns { AreaCodeRecord | undefined }
+   */
+  getAreaCode(value: string): AreaCodeRecord | undefined
+}
