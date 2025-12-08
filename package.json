@@ -1,6 +1,6 @@
 {
   "name": "huez-utils",
-  "version": "0.4",
+  "version": "0.5",
   "description": "A collection of isomorphic utility functions for JavaScript projects.",
   "type": "module",
   "main": "dist/index.js",

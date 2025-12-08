@@ -22,6 +22,23 @@ export interface canvasWordWrapResult {
   fromCache: boolean;
 }
 
+export interface useCamelCaseFactoryResult {
+  /**
+   * @param {string} str A string to convert to camelCase
+   * @returns {string} The camelCase version of the input string  
+   */
+  toCamelCase(str: string): string;
+
+  /**
+   * @description Converts all keys in an object or array from snake_case to camelCase.
+   *   Recursively handles nested objects and arrays.
+   *   Caches converted keys for performance.
+   * @param {object|Array} obj An object that will have keys converted to camelCase
+   * @returns {object|Array} An object with keys converted to camelCase
+   */
+  keysToCamelCase(obj: object): object;
+}
+
 /**
  * Namespace for text utilities.
  * @namespace text
@@ -46,6 +63,8 @@ export const text: {
    * @description Clears the cached word wrap data. 
    */
   clearCanvasWordWrapCache(): void;
+
+  useCamelCase(): useCamelCaseFactoryResult;
 }
 
 /**

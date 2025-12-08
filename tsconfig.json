@@ -8,7 +8,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "lib": ["es2022"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"]
 }

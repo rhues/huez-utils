@@ -1,23 +1,54 @@
-const E = /* @__PURE__ */ new Map();
-function a(c, o, n) {
-  const t = { lines: [], fromCache: !1 }, A = E.get(o + n + c.font);
-  return A ? (t.lines.push(...A), t.fromCache = !0, t) : (o.split(`
-`).forEach((I) => {
-    const U = I.split(" ");
-    let S = "";
-    U.forEach(function(r) {
-      let N = S + " " + r;
-      c.measureText(N.trim()).width > n ? (S.length > 0 && t.lines.push(S), S = r) : S = N.trim();
-    }), S.length > 0 && t.lines.push(S);
-  }), E.set(o + n + c.font, t.lines), t);
+const i = /* @__PURE__ */ new Map();
+function l(c, o, t) {
+  const n = { lines: [], fromCache: !1 }, A = i.get(o + t + c.font);
+  return A ? (n.lines.push(...A), n.fromCache = !0, n) : (o.split(`
+`).forEach((E) => {
+    const e = E.split(" ");
+    let r = "";
+    e.forEach(function(I) {
+      let U = r + " " + I;
+      c.measureText(U.trim()).width > t ? (r.length > 0 && n.lines.push(r), r = I) : r = U.trim();
+    }), r.length > 0 && n.lines.push(r);
+  }), i.set(o + t + c.font, n.lines), n);
 }
 function O() {
-  E.clear();
+  i.clear();
 }
-const H = {
-  canvasWordWrap: a,
-  clearCanvasWordWrapCache: O
-}, l = /* @__PURE__ */ new Set([
+function C() {
+  const c = /* @__PURE__ */ new Map();
+  function o(n) {
+    const A = c.get(n);
+    if (A)
+      return A;
+    let S = "", E = !1;
+    for (let e = 0; e < n.length; e++)
+      n[e] === "_" && e === 0 || (n[e] === "_" ? E = !0 : E ? (S += n[e].toUpperCase(), E = !1) : S += n[e]);
+    return c.set(n, S), S;
+  }
+  function t(n) {
+    if (Array.isArray(n)) {
+      const A = new Array(n.length);
+      for (let S = 0; S < n.length; S++)
+        A[S] = t(n[S]);
+      return A;
+    } else if (n && typeof n == "object" && n.constructor === Object) {
+      const A = {};
+      for (const S in n)
+        Object.prototype.hasOwnProperty.call(n, S) && (A[o(S)] = t(n[S]));
+      return A;
+    }
+    return n;
+  }
+  return {
+    toCamelCase: o,
+    keysToCamelCase: t
+  };
+}
+const s = {
+  canvasWordWrap: l,
+  clearCanvasWordWrapCache: O,
+  useCamelCase: C
+}, u = /* @__PURE__ */ new Set([
   "AAA",
   "AARP",
   "ABB",
@@ -1608,56 +1639,56 @@ const H = {
   "ZUERICH",
   "ZW"
 ]);
-function C(c) {
+function d(c) {
   return c >= 48 && c <= 57;
 }
-function d(c) {
+function R(c) {
   return c >= 65 && c <= 90;
 }
-function u(c) {
+function T(c) {
   return c >= 97 && c <= 122;
 }
-function R(c) {
-  return !(!u(c) && !d(c) && !C(c) && c !== 45 && !(c >= 128));
+function y(c) {
+  return !(!T(c) && !R(c) && !d(c) && c !== 45 && !(c >= 128));
 }
-function T(c) {
+function L(c) {
   const o = { valid: !1, errors: [] };
-  return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(R) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
+  return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (n) => n.codePointAt(0)).every(y) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
 }
-function i(c) {
+function a(c) {
   const o = { valid: !1, errors: [] };
   if (!c)
     return o.valid = !0, o;
   if (c.length > 253 || c.length < 3)
     return o.errors.push({ code: "invalidDomainLength", message: "Invalid domain length" }), o;
-  const n = c.split(".");
-  return n.length < 2 ? (o.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), o) : (n.forEach((t) => {
-    const A = T(t);
+  const t = c.split(".");
+  return t.length < 2 ? (o.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), o) : (t.forEach((n) => {
+    const A = L(n);
     A.errors.length > 0 && o.errors.push(...A.errors);
-  }), o.errors.length > 0 ? o : l.has(n[n.length - 1].toUpperCase()) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), o));
+  }), o.errors.length > 0 ? o : u.has(t[t.length - 1].toUpperCase()) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), o));
 }
-const y = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
-function L(c) {
-  return !y.has(c);
-}
-function M(c) {
-  const o = { valid: !1, errors: [] };
-  return c.length > 64 || c.length < 1 ? (o.errors.push({ code: "invalidEmailLocalPartLength", message: "Invalid email local part length" }), o) : c.startsWith(".") || c.includes("..") ? (o.errors.push({ code: "invalidEmailDot", message: "Invalid email dot" }), o) : c.toLowerCase() === "postmaster" ? (o.errors.push({ code: "invalidEmailNoPostmaster", message: "Invalid email no postmaster" }), o) : Array.from(c, (t) => t.codePointAt(0)).every(L) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidEmailCharacter", message: "Invalid email charactrer" }), o);
-}
+const M = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
 function B(c) {
+  return !M.has(c);
+}
+function G(c) {
+  const o = { valid: !1, errors: [] };
+  return c.length > 64 || c.length < 1 ? (o.errors.push({ code: "invalidEmailLocalPartLength", message: "Invalid email local part length" }), o) : c.startsWith(".") || c.includes("..") ? (o.errors.push({ code: "invalidEmailDot", message: "Invalid email dot" }), o) : c.toLowerCase() === "postmaster" ? (o.errors.push({ code: "invalidEmailNoPostmaster", message: "Invalid email no postmaster" }), o) : Array.from(c, (n) => n.codePointAt(0)).every(B) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidEmailCharacter", message: "Invalid email charactrer" }), o);
+}
+function D(c) {
   const o = { valid: !1, errors: [] };
   if (!c)
     return o.valid = !0, o;
-  const n = c.split("@");
-  if (n.length !== 2)
+  const t = c.split("@");
+  if (t.length !== 2)
     return o.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), o;
-  const t = i(n[1]);
-  if (!t.valid)
-    return o.errors.push(...t.errors), o;
-  const A = M(n[0]);
+  const n = a(t[1]);
+  if (!n.valid)
+    return o.errors.push(...n.errors), o;
+  const A = G(t[0]);
   return A.valid ? (o.valid = !0, o) : (o.errors.push(...A.errors), o);
 }
-const e = [
+const N = [
   { code: "201", location: "NJ", country: "US" },
   { code: "202", location: "DC", country: "US" },
   { code: "203", location: "CT", country: "US" },
@@ -2140,43 +2171,43 @@ const e = [
   { code: "888", location: "TOLL-FREE", country: "US" },
   { code: "900", location: "PREMIUM SERVICES", country: "US" }
 ];
-function G(c, o = {}) {
-  const n = { valid: !1, errors: [] };
+function X(c, o = {}) {
+  const t = { valid: !1, errors: [] };
   if (!c)
-    return n.valid = !0, n;
-  const t = c.replace(/\D/g, "");
-  if (t.length < 8 || t.length > 15)
-    return n.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), n;
+    return t.valid = !0, t;
+  const n = c.replace(/\D/g, "");
+  if (n.length < 8 || n.length > 15)
+    return t.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), t;
   if (o.usOnly)
-    if (t.length === 10) {
-      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(0, 3)))
-        return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
-    } else if (t.length === 11) {
-      if (t.charAt(0) !== "1")
-        return n.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), n;
-      if (!e.filter((A) => A.country === "US").find((A) => A.code === t.substring(1, 4)))
-        return n.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), n;
+    if (n.length === 10) {
+      if (!N.filter((A) => A.country === "US").find((A) => A.code === n.substring(0, 3)))
+        return t.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), t;
+    } else if (n.length === 11) {
+      if (n.charAt(0) !== "1")
+        return t.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), t;
+      if (!N.filter((A) => A.country === "US").find((A) => A.code === n.substring(1, 4)))
+        return t.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), t;
     } else
-      return n.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), n;
-  return n.valid = !0, n;
+      return t.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), t;
+  return t.valid = !0, t;
 }
-const s = {
-  domain: i,
-  email: B,
-  phone: G
+const F = {
+  domain: a,
+  email: D,
+  phone: X
 };
-function D(c) {
+function P(c) {
   if (!c)
     return;
   const o = c.replace(/\D/g, "");
   if (o.length === 3)
-    return e.find((n) => n.code === o);
+    return N.find((t) => t.code === o);
   if (o.length === 10)
-    return e.find((n) => n.code === o.substring(0, 3));
+    return N.find((t) => t.code === o.substring(0, 3));
   if (o.length === 11)
-    return e.find((n) => n.code === o.substring(1, 4));
+    return N.find((t) => t.code === o.substring(1, 4));
 }
-function X(c) {
+function H(c) {
   if (!c)
     return;
   const o = c.replace(/\D/g, "");
@@ -2185,13 +2216,13 @@ function X(c) {
   if (o.length === 11)
     return `(${o.substring(1, 4)}) ${o.substring(4, 7)}-${o.substring(7, 11)}`;
 }
-const F = {
-  getAreaCode: D,
-  formatNpa: X
+const K = {
+  getAreaCode: P,
+  formatNpa: H
 };
 export {
-  F as phone,
-  H as text,
-  s as validation
+  K as phone,
+  s as text,
+  F as validation
 };
 //# sourceMappingURL=index.es.js.map
