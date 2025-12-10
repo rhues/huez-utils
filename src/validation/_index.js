@@ -14,6 +14,7 @@
  */
 
 /**
+ * @description The result of a validation operation.
  * @typedef {Object} ValidationResult
  * @property {boolean} valid Whether the input is valid.
  * @property {Array<ValidationError>} errors Optional validation message.

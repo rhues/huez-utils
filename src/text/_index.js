@@ -2,17 +2,15 @@
 
 /**
  * @typedef {Object} TextNamespace
- * @property canvasWordWrap
- * @property clearCanvasWordWrapCache
+ * @property useCanvasWordWrap
  * @property useCamelCase
  */
 
-import { canvasWordWrap, clearCanvasWordWrapCache } from './canvasWordWrap.js'
+import { useCanvasWordWrap } from './canvasWordWrap.js'
 import { useCamelCase } from './camelCase.js'
 
 /** @type {TextNamespace} */
 export const text = {
-  canvasWordWrap,
-  clearCanvasWordWrapCache,
+  useCanvasWordWrap,
   useCamelCase
 }

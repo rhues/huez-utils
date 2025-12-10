@@ -90,7 +90,7 @@ export const validation: {
    * @description Validates a phone number.
    * @param {string} [value] The phone number to validate.
    * @param {object} [options] optional options.
-   * @param {boolean} [options.usOnly] True to validate with only US phone numbers.
+   * @param {boolean} [options.usOnly=false] True to validate with only US phone numbers.
    * @returns {ValidationResult} The result of the phone number validation.
    */
   phone(value: string, options?: object): ValidationResult;

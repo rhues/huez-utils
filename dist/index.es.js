@@ -1,18 +1,20 @@
-const i = /* @__PURE__ */ new Map();
-function l(c, o, t) {
-  const n = { lines: [], fromCache: !1 }, A = i.get(o + t + c.font);
-  return A ? (n.lines.push(...A), n.fromCache = !0, n) : (o.split(`
-`).forEach((E) => {
-    const e = E.split(" ");
-    let r = "";
-    e.forEach(function(I) {
-      let U = r + " " + I;
-      c.measureText(U.trim()).width > t ? (r.length > 0 && n.lines.push(r), r = I) : r = U.trim();
-    }), r.length > 0 && n.lines.push(r);
-  }), i.set(o + t + c.font, n.lines), n);
-}
 function O() {
-  i.clear();
+  const c = /* @__PURE__ */ new Map();
+  function o(t, n, A) {
+    const S = { lines: [] }, E = c.get(n + A + t.font);
+    return E ? (S.lines.push(...E), S) : (n.split(`
+`).forEach((a) => {
+      const l = a.split(" ");
+      let r = "";
+      l.forEach(function(i) {
+        let I = r + " " + i;
+        t.measureText(I.trim()).width > A ? (r.length > 0 && S.lines.push(r), r = i) : r = I.trim();
+      }), r.length > 0 && S.lines.push(r);
+    }), c.set(n + A + t.font, S.lines), S);
+  }
+  return {
+    wrap: o
+  };
 }
 function C() {
   const c = /* @__PURE__ */ new Map();
@@ -45,8 +47,7 @@ function C() {
   };
 }
 const s = {
-  canvasWordWrap: l,
-  clearCanvasWordWrapCache: O,
+  useCanvasWordWrap: O,
   useCamelCase: C
 }, u = /* @__PURE__ */ new Set([
   "AAA",
@@ -1655,7 +1656,7 @@ function L(c) {
   const o = { valid: !1, errors: [] };
   return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (n) => n.codePointAt(0)).every(y) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
 }
-function a(c) {
+function U(c) {
   const o = { valid: !1, errors: [] };
   if (!c)
     return o.valid = !0, o;
@@ -1682,7 +1683,7 @@ function D(c) {
   const t = c.split("@");
   if (t.length !== 2)
     return o.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), o;
-  const n = a(t[1]);
+  const n = U(t[1]);
   if (!n.valid)
     return o.errors.push(...n.errors), o;
   const A = G(t[0]);
@@ -2192,7 +2193,7 @@ function X(c, o = {}) {
   return t.valid = !0, t;
 }
 const F = {
-  domain: a,
+  domain: U,
   email: D,
   phone: X
 };

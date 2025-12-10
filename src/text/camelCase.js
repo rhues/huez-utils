@@ -1,9 +1,9 @@
 /** @module text/useCamelCase */
 
 /**
- * @typedef {Object} useCamelCaseFactoryResult
- * @property {function} toCamelCase
- * @property {function} keysToCamelCase
+ * @typedef {Object} UseCamelCaseResult
+ * @property {(str: String) => String} toCamelCase
+ * @property {(obj: Object|Array) => Object|Array} keysToCamelCase
  */
 
 /**
@@ -11,8 +11,9 @@
  *   and to convert all keys in an object or array to camelCase.
  *   Uses internal caching for performance.
  *   No higher-order functions and no regex for performance reasons.
+ * @memberof text
  * @module text/useCamelCase
- * @returns {useCamelCaseFactoryResult}
+ * @returns {UseCamelCaseResult} A camelCase utility object.
  */
 export function useCamelCase() {
 
@@ -24,8 +25,8 @@ export function useCamelCase() {
    * Example: 'hello_world' => 'helloWorld'
    * @module text/useCamelCase
    * @memberof text/useCamelCase
-   * @param {string} str - The input string to convert.
-   * @returns {string} The camelCased string.
+   * @param {String} str - The input string to convert.
+   * @returns {String} The camelCased string.
    */
   function toCamelCase(str) {
     const existing = lookup.get(str)
