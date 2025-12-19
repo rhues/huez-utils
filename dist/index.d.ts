@@ -68,6 +68,52 @@ export interface UseCamelCaseResult {
   keysToCamelCase(obj: object): object;
 }
 
+export interface CanvasTextFitResult {
+  /** 
+   * @description An object returned from fitText that contains essential info to draw fitted text
+   */
+  fontSize: number;
+  /** @description Font string applied to the canvas context when text was measured. */
+  font: string;
+  /** @description Wrapped lines that fit within the configured rectangle. */
+  lines: string[];
+  /** @description Line height in pixels used when rendering the lines. */
+  lineHeightPx: number;
+  /** @description Target rectangle width in pixels. */
+  width: number;
+  /** @description Target rectangle height in pixels. */
+  height: number;
+  /** @description Number of iterations taken during the fitting binary search. */
+  steps: number;
+  /** @description Duration of the fit operation in milliseconds. */
+  timeMs: number;
+}
+
+export interface CanvasTextFitOptions {
+  /** @description Line height multiplier. Default 1.25. */
+  lineHeight?: number;
+  /** @description Minimum font size in pixels. Default 6. */
+  minFontSize?: number;
+  /** @description Maximum font size in pixels. Default Math.floor(height / lineHeight) || 120. */
+  maxFontSize?: number;
+  /** @description Hyphen character to use when breaking words. Default en dash. */
+  hyphen?: string;
+  /** @description Toggle hyphenation when breaking long words. Default true. */
+  hyphenate?: boolean;
+  /** @description Toggle breaking words that exceed the line width. Default true. */
+  breakLongWords?: boolean;
+  /** @description Preserve consecutive spaces instead of collapsing them. Default false. */
+  preserveMultipleSpaces?: boolean;
+  /** @description Remove leading spaces from wrapped lines. Default true. */
+  removeLeadingSpaces?: boolean;
+  /** @description Remove trailing spaces from wrapped lines. Default true. */
+  removeTrailingSpaces?: boolean;
+  /** @description Fractional precision target for the binary search. Default 0.01. */
+  precision?: number;
+  /** @description Tolerance used when comparing widths and heights. Default 1e-3. */
+  epsilon?: number;
+}
+
 /**
  * Namespace for text utilities.
  * @namespace text
@@ -85,6 +131,32 @@ export const text: {
    *   and to convert all keys in an object or array to camelCase.
    */
   useCamelCase(): UseCamelCaseResult;
+
+  /**
+   * @description Fits text within a rectangle by adjusting font size and wrapping.
+   *   Returns information required to render the fitted text later.
+   *   Options fall back to the documented defaults when omitted.
+   */
+  fitText(
+    context: CanvasRenderingContext2D,
+    text: string,
+    width: number,
+    height: number,
+    options?: CanvasTextFitOptions
+  ): CanvasTextFitResult;
+
+  /**
+   * @description Draws previously fitted text on a canvas using the metrics from fitText.
+   *   Defaults: x 0, y 0, command 'fillText', verticalAlign 'top'.
+   */
+  drawText(
+    context: CanvasRenderingContext2D,
+    fitResult: CanvasTextFitResult,
+    x?: number,
+    y?: number,
+    command?: 'fillText' | 'strokeText',
+    verticalAlign?: 'top' | 'middle' | 'bottom'
+  ): void;
 }
 
 /**

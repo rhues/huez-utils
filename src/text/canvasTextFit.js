@@ -228,8 +228,7 @@
   }
 
   function setFont(context, size, fontTemplate) {
-    const template = fontTemplate || createFontTemplate(context.font);
-    context.font = template.build(size);
+    context.font = fontTemplate.build(size);
   }
 
   function round3(n) { return Math.floor(n * 1000) / 1000; }
@@ -273,8 +272,7 @@
   }
 
   function convertFontSizeToPx(value, unit) {
-    if (!Number.isFinite(value)) return Number.NaN;
-    const normalizedUnit = typeof unit === 'string' ? unit.toLowerCase() : '';
+    const normalizedUnit = unit.toLowerCase()
     switch (normalizedUnit) {
       case 'px':
         return value;

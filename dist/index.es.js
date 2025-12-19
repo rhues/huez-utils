@@ -1,4 +1,4 @@
-function J() {
+function m() {
   const o = /* @__PURE__ */ new Map();
   function c(t, n, e) {
     const A = { lines: [] }, a = o.get(n + e + t.font);
@@ -7,8 +7,8 @@ function J() {
       const N = r.split(" ");
       let E = "";
       N.forEach(function(i) {
-        let u = E + " " + i;
-        t.measureText(u.trim()).width > e ? (E.length > 0 && A.lines.push(E), E = i) : E = u.trim();
+        let d = E + " " + i;
+        t.measureText(d.trim()).width > e ? (E.length > 0 && A.lines.push(E), E = i) : E = d.trim();
       }), E.length > 0 && A.lines.push(E);
     }), o.set(n + e + t.font, A.lines), A);
   }
@@ -16,7 +16,7 @@ function J() {
     wrap: c
   };
 }
-function w() {
+function J() {
   const o = /* @__PURE__ */ new Map();
   function c(n) {
     const e = o.get(n);
@@ -46,7 +46,7 @@ function w() {
     keysToCamelCase: t
   };
 }
-function Q(o, c, t, n, e = {}) {
+function w(o, c, t, n, e = {}) {
   const A = performance.now(), {
     lineHeight: a = 1.25,
     minFontSize: S = 6,
@@ -54,17 +54,17 @@ function Q(o, c, t, n, e = {}) {
     hyphen: N = "–",
     hyphenate: E = !0,
     breakLongWords: i = !0,
-    preserveMultipleSpaces: u = !1,
+    preserveMultipleSpaces: d = !1,
     removeLeadingSpaces: I = !0,
     removeTrailingSpaces: l = !0,
-    precision: d = 0.01,
+    precision: u = 0.01,
     // binary search stops when precision is reached.
     // Smaller means more steps but more accurate.
     epsilon: O = 1e-3
     // tolerance for fitting calculations
   } = e;
   o.save();
-  const R = V(o.font), C = x(c, { preserveMultipleSpaces: u }), T = new Set(C.filter((U) => U.type !== "break").map((U) => U.text));
+  const R = Z(o.font), C = x(c, { preserveMultipleSpaces: d }), T = new Set(C.filter((U) => U.type !== "break").map((U) => U.text));
   T.add(" "), E && T.add(N);
   const F = Math.max(10, Math.floor((S + r) / 2));
   X(o, F, R);
@@ -72,13 +72,13 @@ function Q(o, c, t, n, e = {}) {
   for (const U of T)
     H.set(U, o.measureText(U).width);
   H.set(" ", o.measureText(" ").width);
-  const W = (U, D) => (H.get(D) ?? o.measureText(D).width) * (U / F);
+  const p = (U, D) => (H.get(D) ?? o.measureText(D).width) * (U / F);
   let L = Math.min(S, r), M = Math.max(S, r), y = (L + M) / 2, B = L, P = 0, f;
-  for (; (M - L) / y > d && P < 10; )
+  for (; (M - L) / y > u && P < 10; )
     P++, f = Y({
       rectWidth: t,
       tokens: C,
-      measureText: (D) => W(y, D),
+      measureText: (D) => p(y, D),
       hyphen: N,
       hyphenate: E,
       breakLongWords: i,
@@ -86,11 +86,11 @@ function Q(o, c, t, n, e = {}) {
       removeTrailingSpaces: l,
       epsilon: O
     }), f.lines.length * (y * a) <= n + O ? (B = y, L = y) : M = y, y = (L + M) / 2;
-  const G = K(B > 0 ? B : Math.max(S, B - d));
+  const G = K(B > 0 ? B : Math.max(S, B - u));
   X(o, G, R);
   const h = /* @__PURE__ */ new Map();
   for (const U of T) h.set(U, o.measureText(U).width);
-  const m = Y({
+  const W = Y({
     rectWidth: t,
     tokens: C,
     measureText: (U) => h.get(U) ?? o.measureText(U).width,
@@ -106,7 +106,7 @@ function Q(o, c, t, n, e = {}) {
   return o.restore(), {
     fontSize: G,
     font: g,
-    lines: m.lines,
+    lines: W.lines,
     lineHeightPx: G * a,
     width: t,
     height: n,
@@ -114,7 +114,7 @@ function Q(o, c, t, n, e = {}) {
     timeMs: performance.now() - A
   };
 }
-function Z(o, c, t = 0, n = 0, e = "fillText", A = "top") {
+function Q(o, c, t = 0, n = 0, e = "fillText", A = "top") {
   if (e !== "fillText" && e !== "strokeText")
     throw new Error(`drawText: invalid command '${e}'. Use 'fillText' or 'strokeText'.`);
   if (A !== "top" && A !== "middle" && A !== "bottom")
@@ -142,13 +142,12 @@ function Z(o, c, t = 0, n = 0, e = "fillText", A = "top") {
   o.restore();
 }
 function X(o, c, t) {
-  const n = t || V(o.font);
-  o.font = n.build(c);
+  o.font = t.build(c);
 }
 function K(o) {
   return Math.floor(o * 1e3) / 1e3;
 }
-function V(o) {
+function Z(o) {
   const c = {
     style: "normal",
     weight: "normal",
@@ -172,8 +171,7 @@ function V(o) {
   };
 }
 function v(o, c) {
-  if (!Number.isFinite(o)) return Number.NaN;
-  switch (typeof c == "string" ? c.toLowerCase() : "") {
+  switch (c.toLowerCase()) {
     case "px":
       return o;
     case "pt":
@@ -227,13 +225,13 @@ function Y({
 }) {
   const N = [];
   let E = [], i = 0;
-  const u = t(" ") ?? 0, I = () => {
+  const d = t(" ") ?? 0, I = () => {
     if (a)
       for (; E[0]?.type === "space"; )
-        i -= u, E.shift();
+        i -= d, E.shift();
     if (S)
       for (; E[E.length - 1]?.type === "space"; )
-        i -= u, E.pop();
+        i -= d, E.pop();
     N.push(E.map((l) => l.text).join("")), E = [], i = 0;
   };
   for (const l of c) {
@@ -241,16 +239,16 @@ function Y({
       I();
       continue;
     }
-    const d = l.type === "space" ? u : t(l.text);
-    if (i + d <= o + r) {
-      E.push(l), i += d;
+    const u = l.type === "space" ? d : t(l.text);
+    if (i + u <= o + r) {
+      E.push(l), i += u;
       continue;
     }
     if (l.type === "space") {
       E.length && I();
       continue;
     }
-    if (d > o + r && A) {
+    if (u > o + r && A) {
       const R = b({
         word: l.text,
         rectWidth: o,
@@ -266,7 +264,7 @@ function Y({
       }
       continue;
     }
-    I(), E.push({ type: "word", text: l.text }), i = d;
+    I(), E.push({ type: "word", text: l.text }), i = u;
   }
   return E.length && I(), { lines: N };
 }
@@ -285,22 +283,22 @@ function b({
   for (; r < o.length; ) {
     const E = Math.max(0, c - t);
     E <= a && (t = 0);
-    let i = 1, u = o.length - r, I = 1;
-    for (; i <= u; ) {
-      const O = i + u >> 1, R = o.slice(r, r + O), C = r + O < o.length;
-      n(R) + (A && C ? N : 0) <= E + a ? (I = O, i = O + 1) : u = O - 1;
+    let i = 1, d = o.length - r, I = 1;
+    for (; i <= d; ) {
+      const O = i + d >> 1, R = o.slice(r, r + O), C = r + O < o.length;
+      n(R) + (A && C ? N : 0) <= E + a ? (I = O, i = O + 1) : d = O - 1;
     }
     let l = o.slice(r, r + I);
-    const d = r + I < o.length;
-    A && d && (l += e), S.push(l), t += n(l), r += I, A && d && (t = 0);
+    const u = r + I < o.length;
+    A && u && (l += e), S.push(l), t += n(l), r += I, A && u && (t = 0);
   }
   return S;
 }
 const io = {
-  useCanvasWordWrap: J,
-  useCamelCase: w,
-  fitText: Q,
-  drawText: Z
+  useCanvasWordWrap: m,
+  useCamelCase: J,
+  fitText: w,
+  drawText: Q
 }, k = /* @__PURE__ */ new Set([
   "AAA",
   "AARP",
@@ -1908,7 +1906,7 @@ function j(o) {
   const c = { valid: !1, errors: [] };
   return o.length < 1 || o.length > 63 ? (c.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), c) : Array.from(o, (n) => n.codePointAt(0)).every(_) ? o.startsWith("-") || o.endsWith("-") ? (c.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), c) : (c.valid = !0, c) : (c.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), c);
 }
-function p(o) {
+function V(o) {
   const c = { valid: !1, errors: [] };
   if (!o)
     return c.valid = !0, c;
@@ -1935,7 +1933,7 @@ function no(o) {
   const t = o.split("@");
   if (t.length !== 2)
     return c.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), c;
-  const n = p(t[1]);
+  const n = V(t[1]);
   if (!n.valid)
     return c.errors.push(...n.errors), c;
   const e = to(t[0]);
@@ -2445,7 +2443,7 @@ function eo(o, c = {}) {
   return t.valid = !0, t;
 }
 const Eo = {
-  domain: p,
+  domain: V,
   email: no,
   phone: eo
 };
