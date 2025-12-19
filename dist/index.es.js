@@ -1,55 +1,307 @@
-function O() {
-  const c = /* @__PURE__ */ new Map();
-  function o(t, n, A) {
-    const S = { lines: [] }, E = c.get(n + A + t.font);
-    return E ? (S.lines.push(...E), S) : (n.split(`
-`).forEach((a) => {
-      const l = a.split(" ");
-      let r = "";
-      l.forEach(function(i) {
-        let I = r + " " + i;
-        t.measureText(I.trim()).width > A ? (r.length > 0 && S.lines.push(r), r = i) : r = I.trim();
-      }), r.length > 0 && S.lines.push(r);
-    }), c.set(n + A + t.font, S.lines), S);
+function J() {
+  const o = /* @__PURE__ */ new Map();
+  function c(t, n, e) {
+    const A = { lines: [] }, a = o.get(n + e + t.font);
+    return a ? (A.lines.push(...a), A) : (n.split(`
+`).forEach((r) => {
+      const N = r.split(" ");
+      let E = "";
+      N.forEach(function(i) {
+        let u = E + " " + i;
+        t.measureText(u.trim()).width > e ? (E.length > 0 && A.lines.push(E), E = i) : E = u.trim();
+      }), E.length > 0 && A.lines.push(E);
+    }), o.set(n + e + t.font, A.lines), A);
   }
   return {
-    wrap: o
+    wrap: c
   };
 }
-function C() {
-  const c = /* @__PURE__ */ new Map();
-  function o(n) {
-    const A = c.get(n);
-    if (A)
-      return A;
-    let S = "", E = !1;
-    for (let e = 0; e < n.length; e++)
-      n[e] === "_" && e === 0 || (n[e] === "_" ? E = !0 : E ? (S += n[e].toUpperCase(), E = !1) : S += n[e]);
-    return c.set(n, S), S;
+function w() {
+  const o = /* @__PURE__ */ new Map();
+  function c(n) {
+    const e = o.get(n);
+    if (e)
+      return e;
+    let A = "", a = !1;
+    for (let S = 0; S < n.length; S++)
+      n[S] === "_" && S === 0 || (n[S] === "_" ? a = !0 : a ? (A += n[S].toUpperCase(), a = !1) : A += n[S]);
+    return o.set(n, A), A;
   }
   function t(n) {
     if (Array.isArray(n)) {
-      const A = new Array(n.length);
-      for (let S = 0; S < n.length; S++)
-        A[S] = t(n[S]);
-      return A;
+      const e = new Array(n.length);
+      for (let A = 0; A < n.length; A++)
+        e[A] = t(n[A]);
+      return e;
     } else if (n && typeof n == "object" && n.constructor === Object) {
-      const A = {};
-      for (const S in n)
-        Object.prototype.hasOwnProperty.call(n, S) && (A[o(S)] = t(n[S]));
-      return A;
+      const e = {};
+      for (const A in n)
+        Object.prototype.hasOwnProperty.call(n, A) && (e[c(A)] = t(n[A]));
+      return e;
     }
     return n;
   }
   return {
-    toCamelCase: o,
+    toCamelCase: c,
     keysToCamelCase: t
   };
 }
-const s = {
-  useCanvasWordWrap: O,
-  useCamelCase: C
-}, u = /* @__PURE__ */ new Set([
+function Q(o, c, t, n, e = {}) {
+  const A = performance.now(), {
+    lineHeight: a = 1.25,
+    minFontSize: S = 6,
+    maxFontSize: r = Math.floor(n / a) || 120,
+    hyphen: N = "–",
+    hyphenate: E = !0,
+    breakLongWords: i = !0,
+    preserveMultipleSpaces: u = !1,
+    removeLeadingSpaces: I = !0,
+    removeTrailingSpaces: l = !0,
+    precision: d = 0.01,
+    // binary search stops when precision is reached.
+    // Smaller means more steps but more accurate.
+    epsilon: O = 1e-3
+    // tolerance for fitting calculations
+  } = e;
+  o.save();
+  const R = V(o.font), C = x(c, { preserveMultipleSpaces: u }), T = new Set(C.filter((U) => U.type !== "break").map((U) => U.text));
+  T.add(" "), E && T.add(N);
+  const F = Math.max(10, Math.floor((S + r) / 2));
+  X(o, F, R);
+  const H = /* @__PURE__ */ new Map();
+  for (const U of T)
+    H.set(U, o.measureText(U).width);
+  H.set(" ", o.measureText(" ").width);
+  const W = (U, D) => (H.get(D) ?? o.measureText(D).width) * (U / F);
+  let L = Math.min(S, r), M = Math.max(S, r), y = (L + M) / 2, B = L, P = 0, f;
+  for (; (M - L) / y > d && P < 10; )
+    P++, f = Y({
+      rectWidth: t,
+      tokens: C,
+      measureText: (D) => W(y, D),
+      hyphen: N,
+      hyphenate: E,
+      breakLongWords: i,
+      removeLeadingSpaces: I,
+      removeTrailingSpaces: l,
+      epsilon: O
+    }), f.lines.length * (y * a) <= n + O ? (B = y, L = y) : M = y, y = (L + M) / 2;
+  const G = K(B > 0 ? B : Math.max(S, B - d));
+  X(o, G, R);
+  const h = /* @__PURE__ */ new Map();
+  for (const U of T) h.set(U, o.measureText(U).width);
+  const m = Y({
+    rectWidth: t,
+    tokens: C,
+    measureText: (U) => h.get(U) ?? o.measureText(U).width,
+    hyphen: N,
+    hyphenate: E,
+    breakLongWords: i,
+    removeLeadingSpaces: I,
+    removeTrailingSpaces: l,
+    epsilon: O
+  });
+  X(o, K(G), R);
+  const g = o.font;
+  return o.restore(), {
+    fontSize: G,
+    font: g,
+    lines: m.lines,
+    lineHeightPx: G * a,
+    width: t,
+    height: n,
+    steps: P,
+    timeMs: performance.now() - A
+  };
+}
+function Z(o, c, t = 0, n = 0, e = "fillText", A = "top") {
+  if (e !== "fillText" && e !== "strokeText")
+    throw new Error(`drawText: invalid command '${e}'. Use 'fillText' or 'strokeText'.`);
+  if (A !== "top" && A !== "middle" && A !== "bottom")
+    throw new Error(`drawText: invalid verticalAlign '${A}'. Use 'top', 'middle' or 'bottom'.`);
+  if (!Array.isArray(c?.lines) || c?.lines?.length < 1)
+    throw new Error("drawText: invalid fitResult.lines. Expected array of lines.");
+  if (typeof c?.lineHeightPx != "number" || c?.lineHeightPx <= 0)
+    throw new Error("drawText: invalid fitResult.lineHeightPx. Expected positive number.");
+  if (typeof c?.font != "string" || !c?.font.trim())
+    throw new Error("drawText: invalid fitResult.font. Expected non-empty string.");
+  if (typeof c?.fontSize != "number" || c?.fontSize <= 0)
+    throw new Error("drawText: invalid fitResult.fontSize. Expected positive number.");
+  if (typeof o?.save != "function" || typeof o?.restore != "function")
+    throw new Error("drawText: invalid context. Expected CanvasRenderingContext2D.");
+  if (typeof t != "number" || typeof n != "number")
+    throw new Error("drawText: invalid x or y position.");
+  o.save(), o.font = c.font, o.textBaseline = "top";
+  const a = c.lines.length * c.lineHeightPx;
+  let S = n;
+  A === "middle" ? S = n + (c.height - a) / 2 : A === "bottom" && (S = n + (c.height - a));
+  let r = t;
+  o.textAlign === "center" ? r = t + c.width / 2 : o.textAlign === "right" && (r = t + c.width);
+  for (let N = 0; N < c.lines.length; N++)
+    e === "fillText" ? o.fillText(c.lines[N], r, S + N * c.lineHeightPx) : o.strokeText(c.lines[N], r, S + N * c.lineHeightPx);
+  o.restore();
+}
+function X(o, c, t) {
+  const n = t || V(o.font);
+  o.font = n.build(c);
+}
+function K(o) {
+  return Math.floor(o * 1e3) / 1e3;
+}
+function V(o) {
+  const c = {
+    style: "normal",
+    weight: "normal",
+    build: (i) => `${i}px sans-serif`
+  };
+  if (typeof o != "string" || !o.trim())
+    return c;
+  const t = o.match(/^(.*?)(\d*\.?\d+)([a-zA-Z%]+)(.*)$/);
+  if (!t)
+    return c;
+  const n = t[1], e = Number.parseFloat(t[2]), A = t[3], a = t[4], S = v(e, A);
+  if (!Number.isFinite(S))
+    return c;
+  const r = n.trim().split(/\s+/).filter(Boolean), N = r.find((i) => i === "italic" || i === "oblique") || "normal", E = r.find((i) => i === "bold" || i === "bolder" || i === "lighter" || /^\d{3}$/.test(i)) || "normal";
+  return {
+    style: N,
+    weight: E,
+    baseSize: S,
+    unit: A,
+    build: (i) => `${n}${i}px${a}`
+  };
+}
+function v(o, c) {
+  if (!Number.isFinite(o)) return Number.NaN;
+  switch (typeof c == "string" ? c.toLowerCase() : "") {
+    case "px":
+      return o;
+    case "pt":
+      return o * (96 / 72);
+    case "pc":
+      return o * 16;
+    case "in":
+      return o * 96;
+    case "cm":
+      return o * (96 / 2.54);
+    case "mm":
+      return o * (96 / 25.4);
+    case "q":
+      return o * (96 / 101.6);
+    case "em":
+    case "rem":
+      return o * 16;
+    default:
+      return Number.NaN;
+  }
+}
+function x(o, { preserveMultipleSpaces: c }) {
+  const t = [], n = o.split(`
+`);
+  return n.forEach((e, A) => {
+    if (c) {
+      const a = /(\s+|\S+)/g, S = e.match(a) || [];
+      for (const r of S)
+        if (/^\s+$/.test(r))
+          for (let N = 0; N < r.length; N++) t.push({ type: "space", text: " " });
+        else
+          t.push({ type: "word", text: r });
+    } else {
+      const a = e.trim().split(/\s+/).filter(Boolean);
+      for (let S = 0; S < a.length; S++)
+        t.push({ type: "word", text: a[S] }), S !== a.length - 1 && t.push({ type: "space", text: " " });
+    }
+    A !== n.length - 1 && t.push({ type: "break" });
+  }), t;
+}
+function Y({
+  rectWidth: o,
+  tokens: c,
+  measureText: t,
+  hyphen: n,
+  hyphenate: e,
+  breakLongWords: A,
+  removeLeadingSpaces: a,
+  removeTrailingSpaces: S,
+  epsilon: r
+}) {
+  const N = [];
+  let E = [], i = 0;
+  const u = t(" ") ?? 0, I = () => {
+    if (a)
+      for (; E[0]?.type === "space"; )
+        i -= u, E.shift();
+    if (S)
+      for (; E[E.length - 1]?.type === "space"; )
+        i -= u, E.pop();
+    N.push(E.map((l) => l.text).join("")), E = [], i = 0;
+  };
+  for (const l of c) {
+    if (l.type === "break") {
+      I();
+      continue;
+    }
+    const d = l.type === "space" ? u : t(l.text);
+    if (i + d <= o + r) {
+      E.push(l), i += d;
+      continue;
+    }
+    if (l.type === "space") {
+      E.length && I();
+      continue;
+    }
+    if (d > o + r && A) {
+      const R = b({
+        word: l.text,
+        rectWidth: o,
+        currentWidth: i,
+        measureText: t,
+        hyphen: n,
+        hyphenate: e,
+        epsilon: r
+      });
+      for (const C of R) {
+        const T = t(C);
+        i + T <= o + r ? (E.push({ type: "word", text: C }), i += T) : (I(), E.push({ type: "word", text: C }), i = T);
+      }
+      continue;
+    }
+    I(), E.push({ type: "word", text: l.text }), i = d;
+  }
+  return E.length && I(), { lines: N };
+}
+function b({
+  word: o,
+  rectWidth: c,
+  currentWidth: t,
+  measureText: n,
+  hyphen: e,
+  hyphenate: A,
+  epsilon: a
+}) {
+  const S = [];
+  let r = 0;
+  const N = A ? n(e) : 0;
+  for (; r < o.length; ) {
+    const E = Math.max(0, c - t);
+    E <= a && (t = 0);
+    let i = 1, u = o.length - r, I = 1;
+    for (; i <= u; ) {
+      const O = i + u >> 1, R = o.slice(r, r + O), C = r + O < o.length;
+      n(R) + (A && C ? N : 0) <= E + a ? (I = O, i = O + 1) : u = O - 1;
+    }
+    let l = o.slice(r, r + I);
+    const d = r + I < o.length;
+    A && d && (l += e), S.push(l), t += n(l), r += I, A && d && (t = 0);
+  }
+  return S;
+}
+const io = {
+  useCanvasWordWrap: J,
+  useCamelCase: w,
+  fitText: Q,
+  drawText: Z
+}, k = /* @__PURE__ */ new Set([
   "AAA",
   "AARP",
   "ABB",
@@ -1640,56 +1892,56 @@ const s = {
   "ZUERICH",
   "ZW"
 ]);
-function d(c) {
-  return c >= 48 && c <= 57;
+function z(o) {
+  return o >= 48 && o <= 57;
 }
-function R(c) {
-  return c >= 65 && c <= 90;
+function $(o) {
+  return o >= 65 && o <= 90;
 }
-function T(c) {
-  return c >= 97 && c <= 122;
+function q(o) {
+  return o >= 97 && o <= 122;
 }
-function y(c) {
-  return !(!T(c) && !R(c) && !d(c) && c !== 45 && !(c >= 128));
+function _(o) {
+  return !(!q(o) && !$(o) && !z(o) && o !== 45 && !(o >= 128));
 }
-function L(c) {
-  const o = { valid: !1, errors: [] };
-  return c.length < 1 || c.length > 63 ? (o.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), o) : Array.from(c, (n) => n.codePointAt(0)).every(y) ? c.startsWith("-") || c.endsWith("-") ? (o.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), o) : (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), o);
+function j(o) {
+  const c = { valid: !1, errors: [] };
+  return o.length < 1 || o.length > 63 ? (c.errors.push({ code: "invalidDomainLabelLength", message: "Invalid domain label length" }), c) : Array.from(o, (n) => n.codePointAt(0)).every(_) ? o.startsWith("-") || o.endsWith("-") ? (c.errors.push({ code: "invalidDomainLabelHyphen", message: "Invalid domain label hyphen" }), c) : (c.valid = !0, c) : (c.errors.push({ code: "invalidDomainCharacter", message: "Invalid domain character" }), c);
 }
-function U(c) {
-  const o = { valid: !1, errors: [] };
-  if (!c)
-    return o.valid = !0, o;
-  if (c.length > 253 || c.length < 3)
-    return o.errors.push({ code: "invalidDomainLength", message: "Invalid domain length" }), o;
-  const t = c.split(".");
-  return t.length < 2 ? (o.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), o) : (t.forEach((n) => {
-    const A = L(n);
-    A.errors.length > 0 && o.errors.push(...A.errors);
-  }), o.errors.length > 0 ? o : u.has(t[t.length - 1].toUpperCase()) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), o));
+function p(o) {
+  const c = { valid: !1, errors: [] };
+  if (!o)
+    return c.valid = !0, c;
+  if (o.length > 253 || o.length < 3)
+    return c.errors.push({ code: "invalidDomainLength", message: "Invalid domain length" }), c;
+  const t = o.split(".");
+  return t.length < 2 ? (c.errors.push({ code: "invalidDomainLabelCount", message: "Invalid domain label count" }), c) : (t.forEach((n) => {
+    const e = j(n);
+    e.errors.length > 0 && c.errors.push(...e.errors);
+  }), c.errors.length > 0 ? c : k.has(t[t.length - 1].toUpperCase()) ? (c.valid = !0, c) : (c.errors.push({ code: "invalidDomainTld", message: "Invalid domain top-level domain" }), c));
 }
-const M = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
-function B(c) {
-  return !M.has(c);
+const oo = /* @__PURE__ */ new Set([34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41]);
+function co(o) {
+  return !oo.has(o);
 }
-function G(c) {
-  const o = { valid: !1, errors: [] };
-  return c.length > 64 || c.length < 1 ? (o.errors.push({ code: "invalidEmailLocalPartLength", message: "Invalid email local part length" }), o) : c.startsWith(".") || c.includes("..") ? (o.errors.push({ code: "invalidEmailDot", message: "Invalid email dot" }), o) : c.toLowerCase() === "postmaster" ? (o.errors.push({ code: "invalidEmailNoPostmaster", message: "Invalid email no postmaster" }), o) : Array.from(c, (n) => n.codePointAt(0)).every(B) ? (o.valid = !0, o) : (o.errors.push({ code: "invalidEmailCharacter", message: "Invalid email charactrer" }), o);
+function to(o) {
+  const c = { valid: !1, errors: [] };
+  return o.length > 64 || o.length < 1 ? (c.errors.push({ code: "invalidEmailLocalPartLength", message: "Invalid email local part length" }), c) : o.startsWith(".") || o.includes("..") ? (c.errors.push({ code: "invalidEmailDot", message: "Invalid email dot" }), c) : o.toLowerCase() === "postmaster" ? (c.errors.push({ code: "invalidEmailNoPostmaster", message: "Invalid email no postmaster" }), c) : Array.from(o, (n) => n.codePointAt(0)).every(co) ? (c.valid = !0, c) : (c.errors.push({ code: "invalidEmailCharacter", message: "Invalid email charactrer" }), c);
 }
-function D(c) {
-  const o = { valid: !1, errors: [] };
-  if (!c)
-    return o.valid = !0, o;
-  const t = c.split("@");
+function no(o) {
+  const c = { valid: !1, errors: [] };
+  if (!o)
+    return c.valid = !0, c;
+  const t = o.split("@");
   if (t.length !== 2)
-    return o.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), o;
-  const n = U(t[1]);
+    return c.errors.push({ code: "invalidEmailFormat", message: "Invalid email format" }), c;
+  const n = p(t[1]);
   if (!n.valid)
-    return o.errors.push(...n.errors), o;
-  const A = G(t[0]);
-  return A.valid ? (o.valid = !0, o) : (o.errors.push(...A.errors), o);
+    return c.errors.push(...n.errors), c;
+  const e = to(t[0]);
+  return e.valid ? (c.valid = !0, c) : (c.errors.push(...e.errors), c);
 }
-const N = [
+const s = [
   { code: "201", location: "NJ", country: "US" },
   { code: "202", location: "DC", country: "US" },
   { code: "203", location: "CT", country: "US" },
@@ -2172,58 +2424,58 @@ const N = [
   { code: "888", location: "TOLL-FREE", country: "US" },
   { code: "900", location: "PREMIUM SERVICES", country: "US" }
 ];
-function X(c, o = {}) {
+function eo(o, c = {}) {
   const t = { valid: !1, errors: [] };
-  if (!c)
+  if (!o)
     return t.valid = !0, t;
-  const n = c.replace(/\D/g, "");
+  const n = o.replace(/\D/g, "");
   if (n.length < 8 || n.length > 15)
     return t.errors.push({ code: "invalidPhoneLength", message: "Invalid phone length" }), t;
-  if (o.usOnly)
+  if (c.usOnly)
     if (n.length === 10) {
-      if (!N.filter((A) => A.country === "US").find((A) => A.code === n.substring(0, 3)))
+      if (!s.filter((e) => e.country === "US").find((e) => e.code === n.substring(0, 3)))
         return t.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), t;
     } else if (n.length === 11) {
       if (n.charAt(0) !== "1")
         return t.errors.push({ code: "invalidUsPhoneCountryCode", message: "Invalid US phone country code" }), t;
-      if (!N.filter((A) => A.country === "US").find((A) => A.code === n.substring(1, 4)))
+      if (!s.filter((e) => e.country === "US").find((e) => e.code === n.substring(1, 4)))
         return t.errors.push({ code: "invalidUsPhoneAreaCode", message: "Invalid US phone area code" }), t;
     } else
       return t.errors.push({ code: "invalidUsPhoneLength", message: "Invalid US phone length" }), t;
   return t.valid = !0, t;
 }
-const F = {
-  domain: U,
-  email: D,
-  phone: X
+const Eo = {
+  domain: p,
+  email: no,
+  phone: eo
 };
-function P(c) {
-  if (!c)
+function Ao(o) {
+  if (!o)
     return;
-  const o = c.replace(/\D/g, "");
-  if (o.length === 3)
-    return N.find((t) => t.code === o);
-  if (o.length === 10)
-    return N.find((t) => t.code === o.substring(0, 3));
-  if (o.length === 11)
-    return N.find((t) => t.code === o.substring(1, 4));
+  const c = o.replace(/\D/g, "");
+  if (c.length === 3)
+    return s.find((t) => t.code === c);
+  if (c.length === 10)
+    return s.find((t) => t.code === c.substring(0, 3));
+  if (c.length === 11)
+    return s.find((t) => t.code === c.substring(1, 4));
 }
-function H(c) {
-  if (!c)
+function So(o) {
+  if (!o)
     return;
-  const o = c.replace(/\D/g, "");
-  if (o.length === 10)
-    return `(${o.substring(0, 3)}) ${o.substring(3, 6)}-${o.substring(6, 10)}`;
-  if (o.length === 11)
-    return `(${o.substring(1, 4)}) ${o.substring(4, 7)}-${o.substring(7, 11)}`;
+  const c = o.replace(/\D/g, "");
+  if (c.length === 10)
+    return `(${c.substring(0, 3)}) ${c.substring(3, 6)}-${c.substring(6, 10)}`;
+  if (c.length === 11)
+    return `(${c.substring(1, 4)}) ${c.substring(4, 7)}-${c.substring(7, 11)}`;
 }
-const K = {
-  getAreaCode: P,
-  formatNpa: H
+const ao = {
+  getAreaCode: Ao,
+  formatNpa: So
 };
 export {
-  K as phone,
-  s as text,
-  F as validation
+  ao as phone,
+  io as text,
+  Eo as validation
 };
 //# sourceMappingURL=index.es.js.map
