@@ -22,6 +22,7 @@
     "lint": "eslint src",
     "test": "node run-tests.js",
     "coverage": "c8 node run-tests.js",
+    "release": "node scripts/release.js",
     "prepare": "npm run build"
   },
   "devDependencies": {
