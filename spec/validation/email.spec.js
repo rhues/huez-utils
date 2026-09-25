@@ -88,7 +88,7 @@ describe('validation.email', () => {
 
   it('should reject emails with a local part bad character', () => {
     let test
-    test = validation.email('m\"e@mysite.com')
+    test = validation.email('m"e@mysite.com')
     expect(test.valid).toBe(false)
     expect(test.errors[0].code).toBe('invalidEmailCharacter')
     test = validation.email('m e@mysite.com')

@@ -1,16 +1,16 @@
 import { text } from '../../src/text/_index.js'
 
-const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod " +
-  "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " +
-  "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor " +
-  "in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur " +
-  "sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod ' +
+  'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud ' +
+  'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' +
+  'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur ' +
+  'sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
-const loremIpsumLineBreaks = "Lorem\nipsum\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod " +
-  "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " +
-  "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor " +
-  "in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur " +
-  "sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+const loremIpsumLineBreaks = 'Lorem\nipsum\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod ' +
+  'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud ' +
+  'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' +
+  'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur ' +
+  'sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
 describe('text.useCanvasWordWrap', () => {
 
@@ -22,7 +22,7 @@ describe('text.useCanvasWordWrap', () => {
       },
       loremIpsum,
       200
-    );
+    )
     expect(result.lines).toEqual([
       'Lorem ipsum dolor sit amet, consectetur',
       'adipiscing elit, sed do eiusmod tempor',
@@ -36,7 +36,7 @@ describe('text.useCanvasWordWrap', () => {
       'occaecat cupidatat non proident, sunt in',
       'culpa qui officia deserunt mollit anim',
       'id est laborum.'
-    ]);
+    ])
   })
 
   it('should wrap long lines of text at 10px per character', () => {
@@ -47,7 +47,7 @@ describe('text.useCanvasWordWrap', () => {
       },
       loremIpsum,
       200
-    );
+    )
     expect(result.lines).toEqual([
       'Lorem ipsum dolor',
       'sit amet,',
@@ -75,7 +75,7 @@ describe('text.useCanvasWordWrap', () => {
       'culpa qui officia',
       'deserunt mollit anim',
       'id est laborum.'
-    ]);
+    ])
   })
 
   it('should wrap long lines of text at 5px per character with line breaks', () => {
@@ -86,7 +86,7 @@ describe('text.useCanvasWordWrap', () => {
       },
       loremIpsumLineBreaks,
       200
-    );
+    )
     expect(result.lines).toEqual([
       'Lorem',
       'ipsum',
@@ -102,7 +102,7 @@ describe('text.useCanvasWordWrap', () => {
       'occaecat cupidatat non proident, sunt in',
       'culpa qui officia deserunt mollit anim',
       'id est laborum.'
-    ]);
+    ])
   })
 
   it('should pull values from cache on the second time', () => {
@@ -111,13 +111,13 @@ describe('text.useCanvasWordWrap', () => {
       font: '5px Arial'
     }
 
-    const canvasWordWrap = text.useCanvasWordWrap();
+    const canvasWordWrap = text.useCanvasWordWrap()
 
     const result = canvasWordWrap.wrap(
       context,
       loremIpsum,
       200
-    );
+    )
     expect(result.lines).toEqual([
       'Lorem ipsum dolor sit amet, consectetur',
       'adipiscing elit, sed do eiusmod tempor',
@@ -131,13 +131,13 @@ describe('text.useCanvasWordWrap', () => {
       'occaecat cupidatat non proident, sunt in',
       'culpa qui officia deserunt mollit anim',
       'id est laborum.'
-    ]);
+    ])
     
     const result2 = canvasWordWrap.wrap(
       context,
       loremIpsum,
       200
-    );
+    )
     expect(result2.lines).toEqual([
       'Lorem ipsum dolor sit amet, consectetur',
       'adipiscing elit, sed do eiusmod tempor',
@@ -151,7 +151,7 @@ describe('text.useCanvasWordWrap', () => {
       'occaecat cupidatat non proident, sunt in',
       'culpa qui officia deserunt mollit anim',
       'id est laborum.'
-    ]);
+    ])
     
   })
 })

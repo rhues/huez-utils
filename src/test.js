@@ -1,3 +1,3 @@
-import { validation } from "./validation/_index.js";
+import { validation } from './validation/_index.js'
 
 validation

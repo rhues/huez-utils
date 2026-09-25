@@ -3,7 +3,7 @@
 import { domain } from './domain.js'
 
 // pre-compiled set of blacklisted codepoints --> " ,:;<>[]()
-const blacklistCharacters = new Set([ 34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41 ]);
+const blacklistCharacters = new Set([ 34, 32, 44, 58, 59, 60, 62, 91, 93, 40, 41 ])
 
 /**
  * @param {number} codepoint 

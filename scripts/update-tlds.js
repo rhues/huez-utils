@@ -7,13 +7,13 @@ import punycode from 'punycode/punycode.es6.js'
 
 const FILE_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt'
 // @ts-ignore
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const OUTPUT_PATH = path.resolve(__dirname, '../src/data/tlds.js');
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const OUTPUT_PATH = path.resolve(__dirname, '../src/data/tlds.js')
 
 let lineLength = 0
 
-function processTld(line, result, index) {
+function processTld(line, result) {
   if (lineLength > 70) {
     result.push('\n  ')
     lineLength = 0
